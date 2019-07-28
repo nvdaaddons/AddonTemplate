@@ -3,59 +3,57 @@
 #This file is covered by the GNU General Public License.
 #See the file COPYING.txt for more details.
 
-import codecs
 import gettext
 import os
 import os.path
 import zipfile
+import sys
+sys.dont_write_bytecode = True
 
 import buildVars
 
 def md2html(source, dest):
 	import markdown
 	lang = os.path.basename(os.path.dirname(source)).replace('_', '-')
-	title="{addonSummary} {addonVersion}".format(addonSummary=buildVars.addon_info["addon_summary"], addonVersion=buildVars.addon_info["addon_version"])
+	localeLang = os.path.basename(os.path.dirname(source))
+	try:
+		_ = gettext.translation("nvda", localedir=os.path.join("addon", "locale"), languages=[localeLang]).gettext
+		title=u"{0}".format(_(buildVars.addon_info["addon_summary"]))
+	except:
+		title="{0}".format(buildVars.addon_info["addon_summary"]) 
 	headerDic = {
 		"[[!meta title=\"": "# ",
 		"\"]]": " #",
 	}
-	with codecs.open(source, "r", "utf-8") as f:
+	with open(source, 'r', encoding="utf_8") as f:
 		mdText = f.read()
 		for k, v in headerDic.items():
 			mdText = mdText.replace(k, v, 1)
 		htmlText = markdown.markdown(mdText)
-	with codecs.open(dest, "w", "utf-8") as f:
-		f.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-			"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n" +
-			"    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" +
-			"<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"%s\" lang=\"%s\">\n" % (lang, lang) +
+	with open(dest, 'w', encoding="utf_8") as f:
+		f.write("<!DOCTYPE html>\n" +
+			"<html lang=\"%s\">\n" % lang +
 			"<head>\n" +
-			"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n" +
-			"<link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\" media=\"screen\"/>\n" +
+			"<meta charset=\"UTF-8\">\n" +
+			"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+			"<link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\" media=\"screen\">\n" +
 			"<title>%s</title>\n" % title +
 			"</head>\n<body>\n"
 		)
 		f.write(htmlText)
 		f.write("\n</body>\n</html>")
 
-def mdTool(env):
-	mdAction=env.Action(
-		lambda target,source,env: md2html(source[0].path, target[0].path),
-		lambda target,source,env: 'Generating %s'%target[0],
-	)
-	mdBuilder=env.Builder(
-		action=mdAction,
-		suffix='.html',
-		src_suffix='.md',
-	)
-	env['BUILDERS']['markdown']=mdBuilder
+def generateHelpFiles (source, target, env, for_signature):
+	action = env.Action(lambda target, source, env : md2html(source[0].abspath, target[0].abspath) and None,
+	lambda target, source, env : "Generating %s" % target[0])
+	return action
 
 vars = Variables()
 vars.Add("version", "The version of this build", buildVars.addon_info["addon_version"])
 vars.Add(BoolVariable("dev", "Whether this is a daily development version", False))
 vars.Add("channel", "Update channel for this build", buildVars.addon_info["addon_updateChannel"])
 
-env = Environment(variables=vars, ENV=os.environ, tools=['gettexttool', mdTool])
+env = Environment(variables=vars, ENV=os.environ, tools=['gettexttool'])
 env.Append(**buildVars.addon_info)
 
 if env["dev"]:
@@ -89,6 +87,9 @@ def translatedManifestGenerator(target, source, env, for_signature):
 	return action
 
 env['BUILDERS']['NVDAAddon'] = Builder(generator=addonGenerator)
+env['BUILDERS']['markdown']=Builder(generator = generateHelpFiles,
+	suffix='.html',
+	src_suffix='.md')
 env['BUILDERS']['NVDAManifest'] = Builder(generator=manifestGenerator)
 env['BUILDERS']['NVDATranslatedManifest'] = Builder(generator=translatedManifestGenerator)
 
@@ -120,26 +121,27 @@ def generateManifest(source, dest):
 	addon_info = buildVars.addon_info
 	addon_info["addon_version"] = env["addon_version"]
 	addon_info["addon_updateChannel"] = env["addon_updateChannel"]
-	with codecs.open(source, "r", "utf-8") as f:
+	with open(source, 'r', encoding="utf_8") as f:
 		manifest_template = f.read()
 	manifest = manifest_template.format(**addon_info)
-	with codecs.open(dest, "w", "utf-8") as f:
+	with open(dest, 'w', encoding="utf_8") as f:
 		f.write(manifest)
 
 def generateTranslatedManifest(source, language, out):
-	# No ugettext in Python 3.
-	import sys
-	if sys.version_info.major == 2:
-		_ = gettext.translation("nvda", localedir=os.path.join("addon", "locale"), languages=[language]).ugettext
-	else:
-		_ = gettext.translation("nvda", localedir=os.path.join("addon", "locale"), languages=[language]).gettext
+	_ = gettext.translation("nvda", localedir=os.path.join("addon", "locale"), languages=[language]).gettext
 	vars = {}
 	for var in ("addon_summary", "addon_description"):
-		vars[var] = _(buildVars.addon_info[var])
-	with codecs.open(source, "r", "utf-8") as f:
+		if isinstance(buildVars.addon_info[var], str):
+			vars[var] = _(buildVars.addon_info[var])
+		elif isinstance(buildVars.addon_info[var], list):
+			vars[var] = ''.join([_(l) for l in buildVars.addon_info[var]])
+		else:
+			raise TypeError("Error with %s key in buildVars" % var)
+
+	with open(source, 'r', encoding="utf_8") as f:
 		manifest_template = f.read()
 	result = manifest_template.format(**vars)
-	with codecs.open(out, "w", "utf-8") as f:
+	with open(out, 'w', encoding="utf_8") as f:
 		f.write(result)
 
 def expandGlobs(files):
@@ -147,27 +149,9 @@ def expandGlobs(files):
 
 addon = env.NVDAAddon(addonFile, env.Dir('addon'))
 
-langDirs = [f for f in env.Glob(os.path.join("addon", "locale", "*"))]
-
-#Allow all NVDA's gettext po files to be compiled in source/locale, and manifest files to be generated
-for dir in langDirs:
-	poFile = dir.File(os.path.join("LC_MESSAGES", "nvda.po"))
-	moFile=env.gettextMoFile(poFile)
-	env.Depends(moFile, poFile)
-	translatedManifest = env.NVDATranslatedManifest(dir.File("manifest.ini"), [moFile, os.path.join("manifest-translated.ini.tpl")])
-	env.Depends(translatedManifest, ["buildVars.py"])
-	env.Depends(addon, [translatedManifest, moFile])
-
 pythonFiles = expandGlobs(buildVars.pythonSources)
 for file in pythonFiles:
 	env.Depends(addon, file)
-
-#Convert markdown files to html
-createAddonHelp("addon") # We need at least doc in English and should enable the Help button for the add-on in Add-ons Manager
-for mdFile in env.Glob(os.path.join('addon', 'doc', '*', '*.md')):
-	htmlFile = env.markdown(mdFile)
-	env.Depends(htmlFile, mdFile)
-	env.Depends(addon, htmlFile)
 
 # Pot target
 i18nFiles = expandGlobs(buildVars.i18nSources)
@@ -190,4 +174,21 @@ manifest = env.NVDAManifest(os.path.join("addon", "manifest.ini"), os.path.join(
 env.Depends(manifest, "buildVars.py")
 
 env.Depends(addon, manifest)
+createAddonHelp("addon") # We need at least doc in English and should enable the Help button for the add-on in Add-ons Manager
+langDirs = [f for f in env.Glob(os.path.join("addon", "locale", "*"))]
+
+#Allow all NVDA's gettext po files to be compiled in source/locale, and manifest files to be generated
+for dir in langDirs:
+	poFile = dir.File(os.path.join("LC_MESSAGES", "nvda.po"))
+	moFile=env.gettextMoFile(poFile)
+	env.Depends(moFile, poFile)
+	translatedManifest = env.NVDATranslatedManifest(dir.File("manifest.ini"), [moFile, os.path.join("manifest-translated.ini.tpl")])
+	env.Depends(translatedManifest, ["buildVars.py"])
+	env.Depends(addon, [translatedManifest, moFile])
+	#Convert markdown files to html
+	for mdFile in env.Glob(os.path.join('addon', 'doc', '*', '*.md')):
+		htmlFile = env.markdown(mdFile)
+		env.Depends(htmlFile, [mdFile, moFile])
+		env.Depends(addon, htmlFile)
 env.Default(addon)
+env.Clean (addon, ['.sconsign.dblite', 'addon/doc/en/'])
