@@ -27,13 +27,12 @@ def md2html(source, dest):
 			mdText = mdText.replace(k, v, 1)
 		htmlText = markdown.markdown(mdText)
 	with codecs.open(dest, "w", "utf-8") as f:
-		f.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-			"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n" +
-			"    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" +
-			"<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"%s\" lang=\"%s\">\n" % (lang, lang) +
+		f.write("<!DOCTYPE html>\n" +
+			"<html lang=\"%s\">\n" % lang +
 			"<head>\n" +
-			"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n" +
-			"<link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\" media=\"screen\"/>\n" +
+			"<meta charset=\"UTF-8\">\n" +
+			"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+			"<link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\" media=\"screen\">\n" +
 			"<title>%s</title>\n" % title +
 			"</head>\n<body>\n"
 		)
