@@ -1,10 +1,10 @@
 # NVDA Add-on Scons Template #
 
 This package contains a basic template structure for NVDA add-on development, building, distribution and localization.
-For details about NVDA add-on development please see the [NVDA Developer Guide](http://www.nvda-project.org/documentation/developerGuide.html).
+For details about NVDA add-on development, please see the [NVDA Add-on Development Guide](https://github.com/nvdaaddons/DevGuide/wiki/NVDA-Add-on-Development-Guide).
 The NVDA addon development/discussion list [is here](https://nvda-addons.groups.io/g/nvda-addons)
 
-Copyright (C) 2012-2019 nvda addon team contributors.
+Copyright (C) 2012-2020 nvda addon team contributors.
 
 This package is distributed under the terms of the GNU General Public License, version 2 or later. Please see the file COPYING.txt for further details.
 
