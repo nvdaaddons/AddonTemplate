@@ -17,8 +17,10 @@ To properly configure get text, define the following variables:
 """
 from SCons.Action import Action
 
+
 def exists(env):
 	return True
+
 
 XGETTEXT_COMMON_ARGS = (
 	"--msgid-bugs-address='$gettext_package_bugs_address' "
@@ -27,6 +29,7 @@ XGETTEXT_COMMON_ARGS = (
 	"--keyword=pgettext:1c,2 "
 	"-c -o $TARGET $SOURCES"
 )
+
 
 def generate(env):
 	env.SetDefault(gettext_package_bugs_address="example@example.com")
