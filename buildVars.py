@@ -11,7 +11,7 @@ addon_info = {
 	# add-on Name/identifier, internal for NVDA
 	"addon_name": "addonTemplate",
 	# Add-on summary, usually the user visible name of the addon.
-	# Translators: Summary for this add-on to be shown on installation and add-on information.
+	# Translators: Summary for this add-on to be shown on installation and add-on information found in Add-ons Manager.
 	"addon_summary": _("Add-on user visible name"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
@@ -20,7 +20,7 @@ It can span multiple lines."""),
 	# version
 	"addon_version": "x.y",
 	# Author(s)
-	"addon_author": u"name <name@domain.com>",
+	"addon_author": "name <name@domain.com>",
 	# URL for the add-on documentation support
 	"addon_url": None,
 	# Documentation file name
