@@ -8,9 +8,7 @@ _ = lambda x: x
 
 # Add-on information variables
 addon_info = {
-	# for previously unpublished addons, please follow the community guidelines at:
-	# https://bitbucket.org/nvdaaddonteam/todo/raw/master/guidelines.txt
-	# add-on Name, internal for nvda
+	# add-on Name/identifier, internal for NVDA
 	"addon_name": "addonTemplate",
 	# Add-on summary, usually the user visible name of the addon.
 	# Translators: Summary for this add-on to be shown on installation and add-on information.
