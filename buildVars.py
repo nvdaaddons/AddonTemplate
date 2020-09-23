@@ -40,10 +40,9 @@ It can span multiple lines."""),
 }
 
 
-import os.path
-
 # Define the python files that are the sources of your add-on.
 # You can use glob expressions here, they will be expanded.
+# Fell free to import `os.path` at the top if you need to
 pythonSources = []
 
 # Files that contain strings for translation. Usually your python sources
