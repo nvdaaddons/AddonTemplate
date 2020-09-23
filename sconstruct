@@ -13,6 +13,7 @@ sys.dont_write_bytecode = True
 
 import buildVars
 
+
 def md2html(source, dest):
 	import markdown
 	lang = os.path.basename(os.path.dirname(source)).replace('_', '-')
@@ -41,6 +42,7 @@ def md2html(source, dest):
 		f.write(htmlText)
 		f.write("\n</body>\n</html>")
 
+
 def mdTool(env):
 	mdAction=env.Action(
 		lambda target,source,env: md2html(source[0].path, target[0].path),
@@ -52,6 +54,7 @@ def mdTool(env):
 		src_suffix='.md',
 	)
 	env['BUILDERS']['markdown']=mdBuilder
+
 
 vars = Variables()
 vars.Add("version", "The version of this build", buildVars.addon_info["addon_version"])
@@ -77,6 +80,7 @@ buildVars.addon_info["addon_updateChannel"] = env["addon_updateChannel"]
 
 addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
 
+
 def addonGenerator(target, source, env, for_signature):
 	action = env.Action(
 		lambda target, source, env: createAddonBundleFromPath(source[0].abspath, target[0].abspath) and None,
@@ -84,12 +88,14 @@ def addonGenerator(target, source, env, for_signature):
 	)
 	return action
 
+
 def manifestGenerator(target, source, env, for_signature):
 	action = env.Action(
 		lambda target, source, env: generateManifest(source[0].abspath, target[0].abspath) and None,
 		lambda target, source, env: "Generating manifest %s" % target[0]
 	)
 	return action
+
 
 def translatedManifestGenerator(target, source, env, for_signature):
 	dir = os.path.abspath(os.path.join(os.path.dirname(str(source[0])), ".."))
@@ -100,9 +106,11 @@ def translatedManifestGenerator(target, source, env, for_signature):
 	)
 	return action
 
+
 env['BUILDERS']['NVDAAddon'] = Builder(generator=addonGenerator)
 env['BUILDERS']['NVDAManifest'] = Builder(generator=manifestGenerator)
 env['BUILDERS']['NVDATranslatedManifest'] = Builder(generator=translatedManifestGenerator)
+
 
 def createAddonHelp(dir):
 	docsDir = os.path.join(dir, "doc")
@@ -114,6 +122,7 @@ def createAddonHelp(dir):
 		readmePath = os.path.join(docsDir, "en", "readme.md")
 		readmeTarget = env.Command(readmePath, "readme.md", Copy("$TARGET", "$SOURCE"))
 		env.Depends(addon, readmeTarget)
+
 
 def createAddonBundleFromPath(path, dest):
 	""" Creates a bundle from a directory that contains an addon manifest file."""
@@ -128,6 +137,7 @@ def createAddonBundleFromPath(path, dest):
 				if pathInBundle not in buildVars.excludedFiles: z.write(absPath, pathInBundle)
 	return dest
 
+
 def generateManifest(source, dest):
 	addon_info = buildVars.addon_info
 	with codecs.open(source, "r", "utf-8") as f:
@@ -135,6 +145,7 @@ def generateManifest(source, dest):
 	manifest = manifest_template.format(**addon_info)
 	with codecs.open(dest, "w", "utf-8") as f:
 		f.write(manifest)
+
 
 def generateTranslatedManifest(source, language, out):
 	# No ugettext in Python 3.
@@ -151,8 +162,10 @@ def generateTranslatedManifest(source, language, out):
 	with codecs.open(out, "w", "utf-8") as f:
 		f.write(result)
 
+
 def expandGlobs(files):
 	return [f for pattern in files for f in env.Glob(pattern)]
+
 
 addon = env.NVDAAddon(addonFile, env.Dir('addon'))
 
