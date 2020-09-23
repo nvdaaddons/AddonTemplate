@@ -17,7 +17,7 @@ import buildVars
 def md2html(source, dest):
 	import markdown
 	lang = os.path.basename(os.path.dirname(source)).replace('_', '-')
-	title="{addonSummary} {addonVersion}".format(
+	title = "{addonSummary} {addonVersion}".format(
 		addonSummary=buildVars.addon_info["addon_summary"], addonVersion=buildVars.addon_info["addon_version"]
 	)
 	headerDic = {
@@ -44,16 +44,16 @@ def md2html(source, dest):
 
 
 def mdTool(env):
-	mdAction=env.Action(
-		lambda target,source,env: md2html(source[0].path, target[0].path),
-		lambda target,source,env: 'Generating %s'%target[0],
+	mdAction = env.Action(
+		lambda target, source, env: md2html(source[0].path, target[0].path),
+		lambda target, source, env: 'Generating % s' % target[0],
 	)
-	mdBuilder=env.Builder(
+	mdBuilder = env.Builder(
 		action=mdAction,
 		suffix='.html',
 		src_suffix='.md',
 	)
-	env['BUILDERS']['markdown']=mdBuilder
+	env['BUILDERS']['markdown'] = mdBuilder
 
 
 vars = Variables()
@@ -174,7 +174,7 @@ langDirs = [f for f in env.Glob(os.path.join("addon", "locale", "*"))]
 #Allow all NVDA's gettext po files to be compiled in source/locale, and manifest files to be generated
 for dir in langDirs:
 	poFile = dir.File(os.path.join("LC_MESSAGES", "nvda.po"))
-	moFile=env.gettextMoFile(poFile)
+	moFile = env.gettextMoFile(poFile)
 	env.Depends(moFile, poFile)
 	translatedManifest = env.NVDATranslatedManifest(
 		dir.File("manifest.ini"),
@@ -197,7 +197,7 @@ for mdFile in env.Glob(os.path.join('addon', 'doc', '*', '*.md')):
 
 # Pot target
 i18nFiles = expandGlobs(buildVars.i18nSources)
-gettextvars={
+gettextvars = {
 		'gettext_package_bugs_address': 'nvda-translations@groups.io',
 		'gettext_package_name': buildVars.addon_info['addon_name'],
 		'gettext_package_version': buildVars.addon_info['addon_version']
@@ -217,4 +217,4 @@ env.Depends(manifest, "buildVars.py")
 
 env.Depends(addon, manifest)
 env.Default(addon)
-env.Clean (addon, ['.sconsign.dblite', 'addon/doc/en/'])
+env.Clean(addon, ['.sconsign.dblite', 'addon/doc/en/'])
