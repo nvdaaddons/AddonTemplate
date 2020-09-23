@@ -14,7 +14,8 @@ addon_info = {
 	# add-on Name/identifier, internal for NVDA
 	"addon_name": "addonTemplate",
 	# Add-on summary, usually the user visible name of the addon.
-	# Translators: Summary for this add-on to be shown on installation and add-on information found in Add-ons Manager.
+	# Translators: Summary for this add-on
+	# to be shown on installation and add-on information found in Add-ons Manager.
 	"addon_summary": _("Add-on user visible name"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
@@ -32,7 +33,9 @@ It can span multiple lines."""),
 	"addon_minimumNVDAVersion": None,
 	# Last NVDA version supported/tested (e.g. "2018.4.0", ideally more recent than minimum version)
 	"addon_lastTestedNVDAVersion": None,
-	# Add-on update channel (default is None, denoting stable releases, and for development releases, use "dev"; do not change unless you know what you are doing)
+	# Add-on update channel (default is None, denoting stable releases,
+	# and for development releases, use "dev".)
+	# Ddo not change unless you know what you are doing!
 	"addon_updateChannel": None,
 }
 
