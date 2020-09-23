@@ -16,7 +16,9 @@ import buildVars
 def md2html(source, dest):
 	import markdown
 	lang = os.path.basename(os.path.dirname(source)).replace('_', '-')
-	title="{addonSummary} {addonVersion}".format(addonSummary=buildVars.addon_info["addon_summary"], addonVersion=buildVars.addon_info["addon_version"])
+	title="{addonSummary} {addonVersion}".format(
+		addonSummary=buildVars.addon_info["addon_summary"], addonVersion=buildVars.addon_info["addon_version"]
+	)
 	headerDic = {
 		"[[!meta title=\"": "# ",
 		"\"]]": " #",
@@ -76,20 +78,26 @@ buildVars.addon_info["addon_updateChannel"] = env["addon_updateChannel"]
 addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
 
 def addonGenerator(target, source, env, for_signature):
-	action = env.Action(lambda target, source, env : createAddonBundleFromPath(source[0].abspath, target[0].abspath) and None,
-	lambda target, source, env : "Generating Addon %s" % target[0])
+	action = env.Action(
+		lambda target, source, env: createAddonBundleFromPath(source[0].abspath, target[0].abspath) and None,
+		lambda target, source, env: "Generating Addon %s" % target[0]
+	)
 	return action
 
 def manifestGenerator(target, source, env, for_signature):
-	action = env.Action(lambda target, source, env : generateManifest(source[0].abspath, target[0].abspath) and None,
-	lambda target, source, env : "Generating manifest %s" % target[0])
+	action = env.Action(
+		lambda target, source, env: generateManifest(source[0].abspath, target[0].abspath) and None,
+		lambda target, source, env: "Generating manifest %s" % target[0]
+	)
 	return action
 
 def translatedManifestGenerator(target, source, env, for_signature):
 	dir = os.path.abspath(os.path.join(os.path.dirname(str(source[0])), ".."))
 	lang = os.path.basename(dir)
-	action = env.Action(lambda target, source, env : generateTranslatedManifest(source[1].abspath, lang, target[0].abspath) and None,
-	lambda target, source, env : "Generating translated manifest %s" % target[0])
+	action = env.Action(
+		lambda target, source, env: generateTranslatedManifest(source[1].abspath, lang, target[0].abspath) and None,
+		lambda target, source, env: "Generating translated manifest %s" % target[0]
+	)
 	return action
 
 env['BUILDERS']['NVDAAddon'] = Builder(generator=addonGenerator)
@@ -155,7 +163,10 @@ for dir in langDirs:
 	poFile = dir.File(os.path.join("LC_MESSAGES", "nvda.po"))
 	moFile=env.gettextMoFile(poFile)
 	env.Depends(moFile, poFile)
-	translatedManifest = env.NVDATranslatedManifest(dir.File("manifest.ini"), [moFile, os.path.join("manifest-translated.ini.tpl")])
+	translatedManifest = env.NVDATranslatedManifest(
+		dir.File("manifest.ini"),
+		[moFile, os.path.join("manifest-translated.ini.tpl")]
+	)
 	env.Depends(translatedManifest, ["buildVars.py"])
 	env.Depends(addon, [translatedManifest, moFile])
 
@@ -164,7 +175,8 @@ for file in pythonFiles:
 	env.Depends(addon, file)
 
 #Convert markdown files to html
-createAddonHelp("addon") # We need at least doc in English and should enable the Help button for the add-on in Add-ons Manager
+# We need at least doc in English and should enable the Help button for the add-on in Add-ons Manager
+createAddonHelp("addon")
 for mdFile in env.Glob(os.path.join('addon', 'doc', '*', '*.md')):
 	htmlFile = env.markdown(mdFile)
 	env.Depends(htmlFile, mdFile)
@@ -173,9 +185,9 @@ for mdFile in env.Glob(os.path.join('addon', 'doc', '*', '*.md')):
 # Pot target
 i18nFiles = expandGlobs(buildVars.i18nSources)
 gettextvars={
-		'gettext_package_bugs_address' : 'nvda-translations@groups.io',
-		'gettext_package_name' : buildVars.addon_info['addon_name'],
-		'gettext_package_version' : buildVars.addon_info['addon_version']
+		'gettext_package_bugs_address': 'nvda-translations@groups.io',
+		'gettext_package_name': buildVars.addon_info['addon_name'],
+		'gettext_package_version': buildVars.addon_info['addon_version']
 	}
 
 pot = env.gettextPotFile("${addon_name}.pot", i18nFiles, **gettextvars)
