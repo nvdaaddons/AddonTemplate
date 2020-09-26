@@ -39,10 +39,6 @@ It can span multiple lines."""),
 	"addon_updateChannel": None,
 }
 
-
-import os.path  # NOQA
-
-
 # Define the python files that are the sources of your add-on.
 # You can use glob expressions here, they will be expanded.
 pythonSources = []
