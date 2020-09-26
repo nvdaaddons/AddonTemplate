@@ -11,7 +11,8 @@ import zipfile
 import sys
 sys.dont_write_bytecode = True
 
-import buildVars
+# Bytecode should not be written for build vars module to keep the repository root folder clean.
+import buildVars  # NOQA: E402
 
 
 def md2html(source, dest):
