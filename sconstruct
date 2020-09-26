@@ -30,19 +30,21 @@ def md2html(source, dest):
 		for k, v in headerDic.items():
 			mdText = mdText.replace(k, v, 1)
 		htmlText = markdown.markdown(mdText)
+	# Optimization: build resulting HTML text in one go instead of writing parts separately.
+	docText = "\n".join([
+		"<!DOCTYPE html>",
+		"<html lang=\"%s\">" % lang,
+		"<head>",
+		"<meta charset=\"UTF-8\">"
+		"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
+		"<link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\" media=\"screen\">",
+		"<title>%s</title>" % title,
+		"</head>\n<body>",
+		htmlText,
+		"</body>\n</html>"
+	])
 	with codecs.open(dest, "w", "utf-8") as f:
-		f.write(
-			"<!DOCTYPE html>\n"
-			+ "<html lang=\"%s\">\n" % lang
-			+ "<head>\n"
-			+ "<meta charset=\"UTF-8\">\n"
-			+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
-			+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\" media=\"screen\">\n"
-			+ "<title>%s</title>\n" % title
-			+ "</head>\n<body>\n"
-		)
-		f.write(htmlText)
-		f.write("\n</body>\n</html>")
+		f.write(docText)
 
 
 def mdTool(env):
