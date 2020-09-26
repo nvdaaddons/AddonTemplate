@@ -35,14 +35,16 @@ It can span multiple lines."""),
 	"addon_lastTestedNVDAVersion": None,
 	# Add-on update channel (default is None, denoting stable releases,
 	# and for development releases, use "dev".)
-	# Ddo not change unless you know what you are doing!
+	# Do not change unless you know what you are doing!
 	"addon_updateChannel": None,
 }
 
 
+import os.path  # NOQA
+
+
 # Define the python files that are the sources of your add-on.
 # You can use glob expressions here, they will be expanded.
-# Fell free to import `os.path` at the top if you need to
 pythonSources = []
 
 # Files that contain strings for translation. Usually your python sources
