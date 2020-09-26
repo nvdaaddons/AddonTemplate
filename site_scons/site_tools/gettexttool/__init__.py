@@ -47,6 +47,9 @@ def generate(env):
 		suffix=".pot")
 
 	env['BUILDERS']['gettextMergePotFile'] = env.Builder(
-		action=Action("xgettext " + "--omit-header --no-location " + XGETTEXT_COMMON_ARGS,
-			"Generating pot file $TARGET"),
-		suffix=".pot")
+		action=Action(
+			"xgettext " + "--omit-header --no-location " + XGETTEXT_COMMON_ARGS,
+			"Generating pot file $TARGET"
+		),
+		suffix=".pot"
+	)
