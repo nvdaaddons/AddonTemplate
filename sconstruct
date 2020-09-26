@@ -60,6 +60,7 @@ def mdTool(env):
 	env['BUILDERS']['markdown'] = mdBuilder
 
 
+# If using Flake8, F821 should be ignored as 'Variables' and friends come from SCons.
 vars = Variables()
 vars.Add("version", "The version of this build", buildVars.addon_info["addon_version"])
 vars.Add(BoolVariable("dev", "Whether this is a daily development version", False))
