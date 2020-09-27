@@ -49,7 +49,7 @@ It can span multiple lines."""),
 # For example to include all files with a ".py" extension from the "globalPlugins" dir of your add-on
 # the list can be written as follows:
 # pythonSources = ["addon/globalPlugins/*.py"]
-# For more information on SCons Glob expressions please take a loog at:
+# For more information on SCons Glob expressions please take a look at:
 # https://scons.org/doc/production/HTML/scons-user/apd.html
 pythonSources = []
 
