@@ -44,7 +44,13 @@ It can span multiple lines."""),
 }
 
 # Define the python files that are the sources of your add-on.
-# You can use glob expressions here, they will be expanded.
+# You can either list every file (using ""/") as a path separator,
+# or use glob expressions.
+# For example to include all files with a ".py" extension from the "globalPlugins" dir of your add-on
+# the list can be written as follows:
+# pythonSources = ["addon/globalPlugins/*.py"]
+# For more information on SCons Glob expressions please take a loog at:
+# https://scons.org/doc/production/HTML/scons-user/apd.html
 pythonSources = []
 
 # Files that contain strings for translation. Usually your python sources
