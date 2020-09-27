@@ -9,6 +9,13 @@ import os
 import os.path
 import zipfile
 import sys
+
+# While names imported below are available by default in every SConscript
+# Linters aren't aware about them.
+# To avoid Flake8 F821 warnings about them they are imported explicitly.
+# When using other  Scons functions please add them to the line below.
+from SCons.Script import BoolVariable, Builder, Copy, Environment, Variables
+
 sys.dont_write_bytecode = True
 
 # Bytecode should not be written for build vars module to keep the repository root folder clean.
@@ -60,7 +67,6 @@ def mdTool(env):
 	env['BUILDERS']['markdown'] = mdBuilder
 
 
-# If using Flake8, F821 should be ignored as 'Variables' and friends come from SCons.
 vars = Variables()
 vars.Add("version", "The version of this build", buildVars.addon_info["addon_version"])
 vars.Add(BoolVariable("dev", "Whether this is a daily development version", False))
