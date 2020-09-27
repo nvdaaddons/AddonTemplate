@@ -4,7 +4,11 @@
 # Change this file instead of sconstruct or manifest files, whenever possible.
 
 
-# Full getext
+# Since some strings in `addon_info` are translatable,
+# we need to include them in the .po files.
+# Gettext recognizes only strings given as parameters to the `_` function.
+# To avoid initializing translations in this module we simply roll our own "fake" `_` function
+# which returns whatever is given to it as an argument.
 def _(arg):
 	return arg
 
