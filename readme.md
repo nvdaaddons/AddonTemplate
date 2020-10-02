@@ -23,9 +23,9 @@ This template provides the following features you can use to help NVDA add-on de
 
 You need the following software to use this code for your NVDA add-ons development:
 
-* a Python distribution (3.7 or later is recommended). Check the [Python Website](http://www.python.org) for Windows Installers.
-* Scons - [Website](http://www.scons.org/) - version 3.1.0 or greater. Install it using **pip** or grab an windows installer from the website.
-* GNU Gettext tools, if you want to have localization support for your add-on - Recommended. Any Linux distro or cygwin have those installed. You can find windows builds [here](http://gnuwin32.sourceforge.net/downlinks/gettext.php).
+* a Python distribution (3.7 or later is recommended). Check the [Python Website](https://www.python.org) for Windows Installers.
+* Scons - [Website](https://www.scons.org/) - version 3.1.0 or greater. Install it using **pip** or grab an windows installer from the website.
+* GNU Gettext tools, if you want to have localization support for your add-on - Recommended. Any Linux distro or cygwin have those installed. You can find windows builds [here](https://gnuwin32.sourceforge.net/downlinks/gettext.php).
 * Markdown-2.0.1 or greater, if you want to convert documentation files to HTML documents. You can [Download Markdown-2.0.1 installer for Windows](https://pypi.python.org/pypi/Markdown/2.0.1) or get it using `pip install markdown`.
 
 ## Usage
