@@ -61,6 +61,6 @@ i18nSources = pythonSources + ["buildVars.py"]
 excludedFiles = []
 
 # Base language for the NVDA add-on
-# If the source code, add-on interface and readme file located in the root folder are written in a language other than english, modify this variable as appropriate.
+# If your add-on is written in a language other than english, modify this variable
 # For example, set baseLanguage to "es" if your add-on is primarily in spanish
 baseLanguage = "en"
