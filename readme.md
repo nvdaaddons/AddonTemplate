@@ -2,17 +2,18 @@
 
 This package contains a basic template structure for NVDA add-on development, building, distribution and localization.
 For details about NVDA add-on development, please see the [NVDA Add-on Development Guide](https://github.com/nvdaaddons/DevGuide/wiki/NVDA-Add-on-Development-Guide).
-The NVDA addon development/discussion list [is here](https://nvda-addons.groups.io/g/nvda-addons)
+The NVDA add-on development/discussion list [is here](https://nvda-addons.groups.io/g/nvda-addons)
 
-Copyright (C) 2012-2020 nvda addon team contributors.
+Copyright (C) 2012-2020 NVDA Add-on team contributors.
 
 This package is distributed under the terms of the GNU General Public License, version 2 or later. Please see the file COPYING.txt for further details.
 
 ## Features
 
-This template provides the following features you can use to help NVDA add-on development:
+This template provides the following features you can use during NVDA add-on development and packaging:
 
-* Automatic add-on package creation, with naming and version loaded from a centralized build variables file (buildVars.py).
+* Automatic add-on package creation, with naming and version loaded from a centralized build variables file (buildVars.py) or command-line interface.
+	* See packaging section for details on using command-line switches when packaging add-ons with custom version information.
 * Manifest file creation using a template (manifest.ini.tpl). Build variables are replaced on this template. See below for add-on manifest specification.
 * Compilation of gettext mo files before distribution, when needed.
 	* To generate a gettext pot file, please run scons pot. A **addon-name.pot** file will be created with all gettext messages for your add-on. You need to check the buildVars.i18nSources variable to comply with your requirements.
@@ -21,7 +22,7 @@ This template provides the following features you can use to help NVDA add-on de
 
 ## Requirements
 
-You need the following software to use this code for your NVDA add-ons development:
+You need the following software to use this code for your NVDA add-on development and packaging:
 
 * a Python distribution (3.7 or later is recommended). Check the [Python Website](https://www.python.org) for Windows Installers.
 * Scons - [Website](https://www.scons.org/) - version 3.1.0 or greater. Install it using **pip** or grab an windows installer from the website.
@@ -63,6 +64,10 @@ An add-on manifest generated manually or via **buildVars.py** must include the f
 
 1. Open a command line, change to the folder that has the **sconstruct** file (usually the root of your add-on development folder) and run the **scons** command. The created add-on, if there were no errors, is placed in the current directory.
 2. You can further customize variables in the **buildVars.py** file.
+3. You can also customize version and update channel information from command line by passing the following switches when running scons:
+	* version: add-on version string.
+	* channel: update channel (do not use this switch unless you know what you are doing).
+	* dev: suitable for development builds, names the add-on according to current date (yyyymmdd) and sets update channel to "dev".
 
 Note that this template only provides a basic add-on structure and build infrastructure. You may need to adapt it for your specific needs.
 
