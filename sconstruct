@@ -229,4 +229,4 @@ env.Depends(manifest, "buildVars.py")
 
 env.Depends(addon, manifest)
 env.Default(addon)
-env.Clean(addon, ['.sconsign.dblite', 'addon/doc/en/'])
+env.Clean(addon, ['.sconsign.dblite', 'addon/doc/' + buildVars.baseLanguage + '/'])
