@@ -25,8 +25,17 @@ import buildVars  # NOQA: E402
 def md2html(source, dest):
 	import markdown
 	lang = os.path.basename(os.path.dirname(source)).replace('_', '-')
+	localeLang = os.path.basename(os.path.dirname(source))
+	try:
+		if sys.version_info.major == 2:
+			_ = gettext.translation("nvda", localedir=os.path.join("addon", "locale"), languages=[localeLang]).ugettext
+		else:
+			_ = gettext.translation("nvda", localedir=os.path.join("addon", "locale"), languages=[localeLang]).gettext
+		summary = _(buildVars.addon_info["addon_summary"])
+	except:
+		summary = buildVars.addon_info["addon_summary"]
 	title = "{addonSummary} {addonVersion}".format(
-		addonSummary=buildVars.addon_info["addon_summary"], addonVersion=buildVars.addon_info["addon_version"]
+		addonSummary=summary, addonVersion=buildVars.addon_info["addon_version"]
 	)
 	headerDic = {
 		"[[!meta title=\"": "# ",
