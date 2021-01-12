@@ -68,6 +68,6 @@ baseLanguage = "en"
 # Markdown extensions for add-on documentation
 # Most add-ons do not require additional Markdown extensions.
 # If you need to add support for markup such as tables, fill out the below list.
-# Extensions string must be of the form "markdown.extensions.extensionName:extensionClass"
-# e.g. markdown.extensions.tables:TableExtension to add tables.
+# Extensions string must be of the form "markdown.extensions.extensionName"
+# e.g. markdown.extensions.tables to add tables.
 markdownExtensions = []
