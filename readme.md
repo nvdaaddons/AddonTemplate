@@ -25,13 +25,13 @@ This template provides the following features you can use during NVDA add-on dev
 You need the following software to use this code for your NVDA add-on development and packaging:
 
 * a Python distribution (3.7 or later is recommended). Check the [Python Website](https://www.python.org) for Windows Installers.
-* Scons - [Website](https://www.scons.org/) - version 3.1.0 or greater. Install it using **pip** or grab an windows installer from the website.
+* Scons - [Website](https://www.scons.org/) - version 3.1.0 or later. You can instlal it via PIP.
 * GNU Gettext tools, if you want to have localization support for your add-on - Recommended. Any Linux distro or cygwin have those installed. You can find windows builds [here](https://gnuwin32.sourceforge.net/downlinks/gettext.php).
-* Markdown-2.0.1 or greater, if you want to convert documentation files to HTML documents. You can [Download Markdown-2.0.1 installer for Windows](https://pypi.python.org/pypi/Markdown/2.0.1) or get it using `pip install markdown`.
+* Markdown 3.1.0 or later, if you want to convert documentation files to HTML documents. You can install it via PIP.
 
 ## Usage
 
-### To create a new NVDA add-on, taking advantage of this template:
+### To create a new NVDA add-on using this template:
 
 1. Create an empty folder to hold the files for your add-on.
 2. Copy the **site_scons** folder, and the following files, into your new empty folder: **buildVars.py**, **manifest.ini.tpl**, **manifest-translated.ini.tpl**, **sconstruct**, **.gitignore**, and **.gitattributes**
