@@ -24,9 +24,8 @@ import buildVars  # NOQA: E402
 
 def md2html(source, dest):
 	import markdown
-	# Temp: to be replaced by an extensions list in spring 2021.
-	import markdown.extensions.tables
-	mdTable = markdown.extensions.tables.TableExtension()
+	# Use extensions if defined.
+	mdExtensions = buildVars.markdownExtensions
 	lang = os.path.basename(os.path.dirname(source)).replace('_', '-')
 	localeLang = os.path.basename(os.path.dirname(source))
 	try:
@@ -45,7 +44,7 @@ def md2html(source, dest):
 		mdText = f.read()
 		for k, v in headerDic.items():
 			mdText = mdText.replace(k, v, 1)
-		htmlText = markdown.markdown(mdText, extensions=[mdTable])
+		htmlText = markdown.markdown(mdText, extensions=mdExtensions)
 	# Optimization: build resulting HTML text in one go instead of writing parts separately.
 	docText = "\n".join([
 		"<!DOCTYPE html>",
