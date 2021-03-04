@@ -32,7 +32,7 @@ def md2html(source, dest):
 	try:
 		_ = gettext.translation("nvda", localedir=os.path.join("addon", "locale"), languages=[localeLang]).gettext
 		summary = _(buildVars.addon_info["addon_summary"])
-	except:
+	except Exception:
 		summary = buildVars.addon_info["addon_summary"]
 	title = "{addonSummary} {addonVersion}".format(
 		addonSummary=summary, addonVersion=buildVars.addon_info["addon_version"]
