@@ -21,11 +21,10 @@ jobs:
       run: |
         git config --global user.name github-actions
         git config --global user.email github-actions@github.com
-        git remote add l10n https://github.com/nvdaaddons/addonName # Replace with the repo name, for example, clipContentsDesigner
+        git remote add l10n https://github.com/nvdaaddons/${{ github.event.repository.name }}
         git fetch l10n
         git reset l10n/stable addon/doc addon/locale
         git commit -m "Update translations"
         git pull
         git push
-        
         
