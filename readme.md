@@ -20,6 +20,10 @@ This template provides the following features you can use during NVDA add-on dev
 * Automatic generation of manifest localization files directly from gettext po files. Please make sure buildVars.py is included in i18nFiles.
 * Automatic generation of HTML documents from markdown (.md) files, to manage documentation in different languages.
 
+In addition, this template includes configuration files for the following tools for use in add-on development and testing (see "additional tools" section for details):
+
+* Flake8 (flake8.ini): a base configuration file for Flake8 linting tool based on NVDA's own Flake8 configuration file.
+
 ## Requirements
 
 You need the following software to use this code for your NVDA add-on development and packaging:
@@ -69,6 +73,14 @@ An add-on manifest generated manually or via **buildVars.py** must include the f
 	* channel: update channel (do not use this switch unless you know what you are doing).
 	* dev: suitable for development builds, names the add-on according to current date (yyyymmdd) and sets update channel to "dev".
 
-Note that this template only provides a basic add-on structure and build infrastructure. You may need to adapt it for your specific needs.
+### Additional tools
+
+The template includes configuration files for use with additional tools such as linters. These include:
+
+* Flake8 (flake8.ini): a Python code linter (3.7.9 or later, can be installed with PIP).
+
+Read the documentation for the tools you wish to use when building and developing add-ons.
+
+Note that this template only provides a basic add-on structure and build infrastructure. You may need to adapt it for your specific needs such as using additional tools.
 
 If you have any issues please use the NVDA addon list mentioned above.
