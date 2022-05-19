@@ -4,7 +4,7 @@ This package contains a basic template structure for NVDA add-on development, bu
 For details about NVDA add-on development, please see the [NVDA Add-on Development Guide](https://github.com/nvdaaddons/DevGuide/wiki/NVDA-Add-on-Development-Guide).
 The NVDA add-on development/discussion list [is here](https://nvda-addons.groups.io/g/nvda-addons)
 
-Copyright (C) 2012-2021 NVDA Add-on team contributors.
+Copyright (C) 2012-2022 NVDA Add-on team contributors.
 
 This package is distributed under the terms of the GNU General Public License, version 2 or later. Please see the file COPYING.txt for further details.
 
@@ -25,9 +25,9 @@ This template provides the following features you can use during NVDA add-on dev
 You need the following software to use this code for your NVDA add-on development and packaging:
 
 * a Python distribution (3.7 or later is recommended). Check the [Python Website](https://www.python.org) for Windows Installers.
-* Scons - [Website](https://www.scons.org/) - version 3.1.0 or later. You can instlal it via PIP.
+* Scons - [Website](https://www.scons.org/) - version 4.3.0 or later. You can install it via PIP.
 * GNU Gettext tools, if you want to have localization support for your add-on - Recommended. Any Linux distro or cygwin have those installed. You can find windows builds [here](https://gnuwin32.sourceforge.net/downlinks/gettext.php).
-* Markdown 3.1.0 or later, if you want to convert documentation files to HTML documents. You can install it via PIP.
+* Markdown 3.3.0 or later, if you want to convert documentation files to HTML documents. You can install it via PIP.
 
 ## Usage
 
