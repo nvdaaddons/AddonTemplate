@@ -8,12 +8,24 @@ Copyright (C) 2012-2022 NVDA Add-on team contributors.
 
 This package is distributed under the terms of the GNU General Public License, version 2 or later. Please see the file COPYING.txt for further details.
 
+
+
+[alekssamos](https://github.com/alekssamos/) added automatic package of add-ons through Github Actions.
+
+For details about Github Actions  please see the [Workflow syntax for GitHub Actions](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions).
+
+Copyright (C) 2022 alekssamos
+
+
 ## Features
 
 This template provides the following features you can use during NVDA add-on development and packaging:
 
 * Automatic add-on package creation, with naming and version loaded from a centralized build variables file (buildVars.py) or command-line interface.
 	* See packaging section for details on using command-line switches when packaging add-ons with custom version information.
+	* This process will happen automatically when you commit to the main branch, when receiving a pull request, and there is also the possibility of manual launch.
+	* If you have created a tag (E.G.: `git tag v1.0 && git push --tag`), then a release will be automatically created and the add-on file will be uploaded as an asset.
+	* Otherwise, with normal commits or with manual startup, you can download the artifacts from the Actions page of your repository.
 * Manifest file creation using a template (manifest.ini.tpl). Build variables are replaced on this template. See below for add-on manifest specification.
 * Compilation of gettext mo files before distribution, when needed.
 	* To generate a gettext pot file, please run scons pot. A **addon-name.pot** file will be created with all gettext messages for your add-on. You need to check the buildVars.i18nSources variable to comply with your requirements.
