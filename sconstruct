@@ -158,6 +158,59 @@ def createAddonBundleFromPath(path, dest):
 	return dest
 
 
+def createAddonStoreJson(bundle):
+	"""Creates add-on store JSON file from an add-on package and manifest data."""
+	import json
+	import hashlib
+	jsonFilename = f'{buildVars.addon_info["addon_name"]}-{buildVars.addon_info["addon_version"]}.json'
+	print('Generating % s' % jsonFilename)
+	sha256 = hashlib.sha256()
+	with open(bundle,"rb") as f:
+		for byte_block in iter(lambda: f.read(65536),b""):
+			sha256.update(byte_block)
+	hashValue = sha256.hexdigest()
+	minimumNVDAVersion = buildVars.addon_info["addon_minimumNVDAVersion"].split(".")
+	minMajor, minMinor = minimumNVDAVersion[:2]
+	minPatch = minimumNVDAVersion[-1] if len(minimumNVDAVersion) == 3 else "0"
+	lastTestedNVDAVersion = buildVars.addon_info["addon_lastTestedNVDAVersion"].split(".")
+	lastTestedMajor, lastTestedMinor = lastTestedNVDAVersion[:2]
+	lastTestedPatch = lastTestedNVDAVersion[-1] if len(lastTestedNVDAVersion) == 3 else "0"
+	channel = buildVars.addon_info["addon_updateChannel"]
+	if channel is None:
+		channel = "stable"
+	addonStoreEntry = {
+		"addonId": buildVars.addon_info["addon_name"],
+		"displayName": buildVars.addon_info["addon_summary"],
+		"URL": "",
+		"description": buildVars.addon_info["addon_description"],
+		"sha256": hashValue,
+		"homepage": buildVars.addon_info["addon_url"],
+		"addonVersionName": buildVars.addon_info["addon_version"],
+		"addonVersionNumber": {
+			"major": 0,
+			"minor": 0,
+			"patch": 0
+		},
+		"minNVDAVersion": {
+			"major": int(minMajor),
+			"minor": int(minMinor),
+			"patch": int(minPatch)
+		},
+		"lastTestedVersion": {
+			"major": int(lastTestedMajor),
+			"minor": int(lastTestedMinor),
+			"patch": int(lastTestedPatch)
+		},
+		"channel": channel,
+		"publisher": "",
+		"sourceURL": buildVars.addon_info["addon_sourceURL"],
+		"license": buildVars.addon_info["addon_license"],
+		"licenseURL": buildVars.addon_info["addon_licenseURL"],
+	}
+	with open(jsonFilename, "w") as addonStoreJson:
+		json.dump(addonStoreEntry, addonStoreJson, indent="\t")
+
+
 def generateManifest(source, dest):
 	addon_info = buildVars.addon_info
 	with codecs.open(source, "r", "utf-8") as f:
