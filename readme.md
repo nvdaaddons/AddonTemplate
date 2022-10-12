@@ -72,6 +72,12 @@ An add-on manifest generated manually or via **buildVars.py** must include the f
 * lastTestedNVDAVersion (year.major or year.major.minor): the latest or last tested version of NVDA the add-on is said to be compatible with (e.g. 2020.3). Add-on authors are expected to declare this value after testing add-ons with the version of NVDA specified.
 * addon_updateChannel (string or None): the update channel for the add-on release.
 
+In addition, the following information must be filled out (not used in the manifest):
+
+* sourceURL (string): repository URL for the add-on source code.
+* license (string): the license of the add-on and its source code.
+* licenseURL: the URL for the license file.
+
 ### To manage documentation files for your addon:
 
 1. Copy the **readme.md** file for your add-on to the first created folder, where you copied **buildVars.py**. You can also copy **style.css** to improve the presentation of HTML documents.
