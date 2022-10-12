@@ -3,7 +3,8 @@ name: build addon
 on:
   push:
     tags: ["*"]
-    branches: [ main , master ]
+    # To build on main/master branch, uncomment the following line:
+    # branches: [ main , master ]
 
   pull_request:
     branches: [ main, master ]
