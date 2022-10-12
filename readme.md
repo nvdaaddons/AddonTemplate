@@ -23,7 +23,8 @@ This template provides the following features you can use during NVDA add-on dev
 
 * Automatic add-on package creation, with naming and version loaded from a centralized build variables file (buildVars.py) or command-line interface.
 	* See packaging section for details on using command-line switches when packaging add-ons with custom version information.
-	* This process will happen automatically when you commit to the main branch, when receiving a pull request, and there is also the possibility of manual launch.
+	* This process will happen automatically when receiving a pull request, and there is also the possibility of manual launch.
+	* To let the workflow run automatically when pushing to main or master (development) branch, remove the comment for branches line in GitHub Actions (.github/workflow/build_addon.yml).
 	* If you have created a tag (E.G.: `git tag v1.0 && git push --tag`), then a release will be automatically created and the add-on file will be uploaded as an asset.
 	* Otherwise, with normal commits or with manual startup, you can download the artifacts from the Actions page of your repository.
 * Manifest file creation using a template (manifest.ini.tpl). Build variables are replaced on this template. See below for add-on manifest specification.
