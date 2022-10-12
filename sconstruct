@@ -155,6 +155,7 @@ def createAddonBundleFromPath(path, dest):
 				absPath = os.path.join(dir, filename)
 				if pathInBundle not in buildVars.excludedFiles:
 					z.write(absPath, pathInBundle)
+	createAddonStoreJson(dest)
 	return dest
 
 
