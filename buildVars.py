@@ -31,6 +31,8 @@ It can span multiple lines."""),
 	"addon_author": "name <name@domain.com>",
 	# URL for the add-on documentation support
 	"addon_url": None,
+	# URL for the add-on repository where the source code can be found
+	"addon_sourceURL": None,
 	# Documentation file name
 	"addon_docFileName": "readme.html",
 	# Minimum NVDA version supported (e.g. "2018.3.0", minor version is optional)
@@ -41,6 +43,10 @@ It can span multiple lines."""),
 	# and for development releases, use "dev".)
 	# Do not change unless you know what you are doing!
 	"addon_updateChannel": None,
+	# Add-on license such as GPL 2
+	"addon_license": None,
+	# URL for the license document the ad-on is licensed under
+	"addon_licenseURL": None,
 }
 
 # Define the python files that are the sources of your add-on.
