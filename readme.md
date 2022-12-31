@@ -89,6 +89,7 @@ In addition, the following information must be filled out (not used in the manif
 2. You can further customize variables in the **buildVars.py** file.
 3. You can also customize version and update channel information from command line by passing the following switches when running scons:
 	* version: add-on version string.
+	* versionNumber: add-on version number of the form major.minor.patch (all integers)
 	* channel: update channel (do not use this switch unless you know what you are doing).
 	* dev: suitable for development builds, names the add-on according to current date (yyyymmdd) and sets update channel to "dev".
 
