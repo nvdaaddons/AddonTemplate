@@ -77,6 +77,7 @@ def mdTool(env):
 
 vars = Variables()
 vars.Add("version", "The version of this build", buildVars.addon_info["addon_version"])
+vars.Add("versionNumber", "Version number of the form major.minor.patch", "0.0.0", validateVersionNumber)
 vars.Add(BoolVariable("dev", "Whether this is a daily development version", False))
 vars.Add("channel", "Update channel for this build", buildVars.addon_info["addon_updateChannel"])
 
