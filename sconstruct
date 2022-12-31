@@ -77,7 +77,7 @@ def mdTool(env):
 
 def validateVersionNumber(key, val, env):
 	# Used to make sure version major.minor.patch are integers to comply with NV Access add-on store.
-	# Ignore all this if version number is not specified, in which case json generator will validate this information.
+	# Ignore all this if version number is not specified, in which case json generator will validate this info.
 	if val == "0.0.0":
 		return
 	versionNumber = val.split(".")
