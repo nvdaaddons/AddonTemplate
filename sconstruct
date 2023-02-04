@@ -199,10 +199,16 @@ def createAddonStoreJson(bundle):
 		for byte_block in iter(lambda: f.read(65536), b""):
 			sha256.update(byte_block)
 	hashValue = sha256.hexdigest()
-	minimumNVDAVersion = buildVars.addon_info["addon_minimumNVDAVersion"].split(".")
+	try:
+		minimumNVDAVersion = buildVars.addon_info["addon_minimumNVDAVersion"].split(".")
+	except AttributeError:
+		minimumNVDAVersion = [0, 0, 0]
 	minMajor, minMinor = minimumNVDAVersion[:2]
 	minPatch = minimumNVDAVersion[-1] if len(minimumNVDAVersion) == 3 else "0"
-	lastTestedNVDAVersion = buildVars.addon_info["addon_lastTestedNVDAVersion"].split(".")
+	try:
+		lastTestedNVDAVersion = buildVars.addon_info["addon_lastTestedNVDAVersion"].split(".")
+	except AttributeError:
+		lastTestedNVDAVersion = [0, 0, 0]
 	lastTestedMajor, lastTestedMinor = lastTestedNVDAVersion[:2]
 	lastTestedPatch = lastTestedNVDAVersion[-1] if len(lastTestedNVDAVersion) == 3 else "0"
 	channel = buildVars.addon_info["addon_updateChannel"]
