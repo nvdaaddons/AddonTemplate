@@ -36,6 +36,10 @@ This template provides the following features you can use during NVDA add-on dev
 In addition, this template includes configuration files for the following tools for use in add-on development and testing (see "additional tools" section for details):
 
 * Flake8 (flake8.ini): a base configuration file for Flake8 linting tool based on NVDA's own Flake8 configuration file.
+* Configuration for VS Code. It requires NVDA`s repo at the same level that add-on repos, with prepared source code (`scons source`).
+	* Press `control+shift+m`after saving a file to search for problems.
+	* Use arrow and tab keys for the autocompletion feature.
+	* Press `control+shift+p`to open the commands palette and search for recommended extensions to install or check if they are installed.
 
 ## Requirements
 
