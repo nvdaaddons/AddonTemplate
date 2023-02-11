@@ -52,6 +52,8 @@ You need the following software to use this code for your NVDA add-on developmen
 * GNU Gettext tools, if you want to have localization support for your add-on - Recommended. Any Linux distro or cygwin have those installed. You can find windows builds [here](https://gnuwin32.sourceforge.net/downlinks/gettext.php).
 * Markdown 3.3.0 or later, if you want to convert documentation files to HTML documents. You can install it via PIP.
 
+Note, that you may not need these tools in a local build environment, if you are using [Appveyor](https://appveyor.com/) or [GitHub Actions](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions), to build and package your add-ons.
+
 ## Usage
 
 ### To create a new NVDA add-on using this template:
