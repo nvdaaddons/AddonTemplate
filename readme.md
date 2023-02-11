@@ -30,7 +30,7 @@ This template provides the following features you can use during NVDA add-on dev
 	* Otherwise, with normal commits or with manual startup, you can download the artifacts from the Actions page of your repository.
 * Manifest file creation using a template (manifest.ini.tpl). Build variables are replaced on this template. See below for add-on manifest specification.
 * Compilation of gettext mo files before distribution, when needed.
-	* To generate a gettext pot file, please run scons pot. An **addon-name.pot** file will be created with all gettext messages for your add-on. You need to check the `buildVars.i18nSources` variable to comply with your requirements.
+	* To generate a gettext pot file, please run `scons pot`. An `addon-name.pot` file will be created with all gettext messages for your add-on. You need to check the `buildVars.i18nSources` variable to comply with your requirements.
 * Automatic generation of manifest localization files directly from gettext po files. Please make sure buildVars.py is included in i18nFiles.
 * Automatic generation of HTML documents from markdown (.md) files, to manage documentation in different languages.
 * Automatic generation of entries for NV Access add-on store (json format).
@@ -82,7 +82,7 @@ sconstruct
 
 #### Add-on manifest specification
 
-An add-on manifest generated manually or via **buildVars.py** must include the following information:
+An add-on manifest generated manually or via `buildVars.py` must include the following information:
 
 * Name (string): a unique identifier for the add-on. It must use camel case (e.g. someModule). This is also used as part of add-on store to identify the add-on uniquely.
 * Summary (string): name as shown on NVDA's Add-ons Manager.
@@ -103,13 +103,13 @@ In addition, the following information must be filled out (not used in the manif
 
 ### To manage documentation files for your addon:
 
-1. Copy the **readme.md** file for your add-on to the first created folder, where you copied **buildVars.py**. You can also copy **style.css** to improve the presentation of HTML documents.
-2. Documentation files (named **readme.md**) must be placed into addon\doc\<lang>/.
+1. Copy the `readme.md` file for your add-on to the first created folder, where you copied `buildVars.py`. You can also copy `style.css` to improve the presentation of HTML documents.
+2. Documentation files (named `readme.md`) must be placed into `addon\doc\<lang>/`.
 
 ### To package the add-on for distribution:
 
-1. Open a command line, change to the folder that has the **sconstruct** file (usually the root of your add-on development folder) and run the **scons** command. The created add-on, if there were no errors, is placed in the current directory.
-2. You can further customize variables in the **buildVars.py** file.
+1. Open a command line, change to the folder that has the `sconstruct` file (usually the root of your add-on development folder) and run the `scons` command. The created add-on, if there were no errors, is placed in the current directory.
+2. You can further customize variables in the `buildVars.py` file.
 3. You can also customize version and update channel information from command line by passing the following switches when running scons:
 	* version: add-on version string.
 	* versionNumber: add-on version number of the form major.minor.patch (all integers)
