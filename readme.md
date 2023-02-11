@@ -30,7 +30,7 @@ This template provides the following features you can use during NVDA add-on dev
 	* Otherwise, with normal commits or with manual startup, you can download the artifacts from the Actions page of your repository.
 * Manifest file creation using a template (manifest.ini.tpl). Build variables are replaced on this template. See below for add-on manifest specification.
 * Compilation of gettext mo files before distribution, when needed.
-	* To generate a gettext pot file, please run scons pot. A **addon-name.pot** file will be created with all gettext messages for your add-on. You need to check the buildVars.i18nSources variable to comply with your requirements.
+	* To generate a gettext pot file, please run scons pot. An **addon-name.pot** file will be created with all gettext messages for your add-on. You need to check the `buildVars.i18nSources` variable to comply with your requirements.
 * Automatic generation of manifest localization files directly from gettext po files. Please make sure buildVars.py is included in i18nFiles.
 * Automatic generation of HTML documents from markdown (.md) files, to manage documentation in different languages.
 * Automatic generation of entries for NV Access add-on store (json format).
@@ -38,7 +38,7 @@ This template provides the following features you can use during NVDA add-on dev
 In addition, this template includes configuration files for the following tools for use in add-on development and testing (see "additional tools" section for details):
 
 * Flake8 (flake8.ini): a base configuration file for Flake8 linting tool based on NVDA's own Flake8 configuration file.
-* Configuration for VS Code. It requires NVDA`s repo at the same level that add-on repos, with prepared source code (`scons source`).
+* Configuration for VS Code. It requires NVDA's repo at the same level as the add-on repo, with prepared source code (`scons source`).
 	* Press `control+shift+m`after saving a file to search for problems.
 	* Use arrow and tab keys for the autocompletion feature.
 	* Press `control+shift+p`to open the commands palette and search for recommended extensions to install or check if they are installed.
