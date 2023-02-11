@@ -76,6 +76,10 @@ sconstruct
 ```
 .github
 ```
+and file:
+```
+.pre-commit-config.yaml
+```
 4. Create an `addon` folder inside your new folder. You will put your code in the usual folders for NVDA extensions, under the `addon` folder. For instance: `globalPlugins`, `synthDrivers`, etc.
 5. In the `buildVars.py` file, change variable `addon_info` with your add-on's information (name, summary, description, version, author, url, source url, license, and license URL).
 6. Gettext translations must be placed into `addon\locale\<lang>/LC_MESSAGES\nvda.po`.
