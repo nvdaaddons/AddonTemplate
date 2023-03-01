@@ -3,8 +3,9 @@
 This package contains a basic template structure for NVDA add-on development, building, distribution and localization.
 For details about NVDA add-on development, please see the [NVDA Add-on Development Guide](https://github.com/nvdaaddons/DevGuide/wiki/NVDA-Add-on-Development-Guide).
 The NVDA add-on development/discussion list [is here](https://nvda-addons.groups.io/g/nvda-addons)
+Information specific to NV Access add-on store [can be found here](https://github.com/nvaccess/addon-datastore).
 
-Copyright (C) 2012-2022 NVDA Add-on team contributors.
+Copyright (C) 2012-2023 NVDA Add-on team contributors.
 
 This package is distributed under the terms of the GNU General Public License, version 2 or later. Please see the file COPYING.txt for further details.
 
@@ -32,6 +33,7 @@ This template provides the following features you can use during NVDA add-on dev
 	* To generate a gettext pot file, please run scons pot. A **addon-name.pot** file will be created with all gettext messages for your add-on. You need to check the buildVars.i18nSources variable to comply with your requirements.
 * Automatic generation of manifest localization files directly from gettext po files. Please make sure buildVars.py is included in i18nFiles.
 * Automatic generation of HTML documents from markdown (.md) files, to manage documentation in different languages.
+* Automatic generation of entries for NV Access add-on store (json format).
 
 In addition, this template includes configuration files for the following tools for use in add-on development and testing (see "additional tools" section for details):
 
@@ -57,7 +59,7 @@ You need the following software to use this code for your NVDA add-on developmen
 1. Create an empty folder to hold the files for your add-on.
 2. Copy the **site_scons** folder, and the following files, into your new empty folder: **buildVars.py**, **manifest.ini.tpl**, **manifest-translated.ini.tpl**, **sconstruct**, **.gitignore**, and **.gitattributes**
 3. Create an **addon** folder inside your new folder. Inside the **addon* folder, create needed folders for the add-on modules (e.g. appModules, synthDrivers, etc.). An add-on may have one or more module folders.
-4. In the **buildVars.py** file, change variable **addon_info** with your add-on's information (name, summary, description, version, author and url).
+4. In the **buildVars.py** file, change variable **addon_info** with your add-on's information (name, summary, description, version, author, url, source url, license, and license URL).
 5. Put your code in the usual folders for NVDA extension, under the **addon** folder. For instance: globalPlugins, synthDrivers, etc.
 6. Gettext translations must be placed into addon\locale\<lang>/LC_MESSAGES\nvda.po. 
 
@@ -65,10 +67,10 @@ You need the following software to use this code for your NVDA add-on developmen
 
 An add-on manifest generated manually or via **buildVars.py** must include the following information:
 
-* Name (string): a unique identifier for the add-on. It must use camel case (e.g. someModule).
+* Name (string): a unique identifier for the add-on. It must use camel case (e.g. someModule). This is also used as part of add-on store to identify the add-on uniquely.
 * Summary (string): name as shown on NVDA's Add-ons Manager.
 * Description (string): a short detailed description about the add-on.
-* Version (string)
+* Version (string), ideally number.number with an optional third number, denoting major.minor.patch.
 * Author (string and an email address): one or more add-on author contact information in the form "name <email@address>".
 * URL (string): a web address where the add-on information can be found (typically community add-ons website address (https://addons.nvda-project.org) is used).
 * docFileName (string): name of the documentation file.
@@ -76,7 +78,7 @@ An add-on manifest generated manually or via **buildVars.py** must include the f
 * lastTestedNVDAVersion (year.major or year.major.minor): the latest or last tested version of NVDA the add-on is said to be compatible with (e.g. 2020.3). Add-on authors are expected to declare this value after testing add-ons with the version of NVDA specified.
 * addon_updateChannel (string or None): the update channel for the add-on release.
 
-In addition, the following information must be filled out (not used in the manifest):
+In addition, the following information must be filled out (not used in the manifest but used elsewhere such as add-on store):
 
 * sourceURL (string): repository URL for the add-on source code.
 * license (string): the license of the add-on and its source code.
