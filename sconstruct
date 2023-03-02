@@ -191,9 +191,9 @@ def createAddonStoreJson(bundle):
 		versionNumberParsed = []
 	if len(versionNumberParsed):
 		major, minor, patch = [int(part) for part in versionNumberParsed]
-		jsonFilename = f'{buildVars.addon_info["addon_name"]}-{major}.{minor}.{patch}.json'
+		jsonFilename = f'{major}.{minor}.{patch}.json'
 	else:
-		jsonFilename = f'{buildVars.addon_info["addon_name"]}-{buildVars.addon_info["addon_version"]}.json'
+		jsonFilename = f'{buildVars.addon_info["addon_version"]}.json'
 		major, minor, patch = 0, 0, 0
 	print('Generating % s' % jsonFilename)
 	sha256 = hashlib.sha256()
