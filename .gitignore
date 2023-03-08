@@ -8,3 +8,4 @@ addon/doc/en/
 *.py[co]
 *.nvda-addon
 .sconsign.dblite
+/[0-9]*.[0-9]*.[0-9]*.json
