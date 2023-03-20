@@ -38,16 +38,18 @@ This template provides the following features you can use during NVDA add-on dev
 In addition, this template includes configuration files for the following tools for use in add-on development and testing (see "additional tools" section for details):
 
 * Flake8 (flake8.ini): a base configuration file for Flake8 linting tool based on NVDA's own Flake8 configuration file.
-* Configuration for VS Code. It requires NVDA's repo at the same level as the add-on repo, with prepared source code (`scons source`).
-	* Press `control+shift+m`after saving a file to search for problems.
+* Configuration for VS Code. It requires NVDA's repo at the same level as the add-on folder containing your actual source files, with prepared source code (`scons source`). preparing the source code is a step in the instructions for building NVDA itself, see [The NVDA Repository](https://github.com/nvaccess/nvda) for details.
+        * Place the .vscode in this repo within the addon folder, where your add-on source files (will) reside. The settings file within this folder assumes the NVDA repository is within the parent folder of this folder. If your addon folder is within the addonTemplate folder, then your NVDA repository folder needs to also be within the addonTemplate folder, or the source will not be found.
+        * Open the addon folder in VS Code. This should initialize VS Code with the correct settings and provide you with code completion and other VS Code features. 
+	* Press `control+shift+m` after saving a file to search for problems.
 	* Use arrow and tab keys for the autocompletion feature.
-	* Press `control+shift+p`to open the commands palette and search for recommended extensions to install or check if they are installed.
+	* Press `control+shift+p` to open the commands palette and search for recommended extensions to install or check if they are installed.
 
 ## Requirements
 
 You need the following software to use this code for your NVDA add-on development and packaging:
 
-* a Python distribution (3.7 or later is recommended). Check the [Python Website](https://www.python.org) for Windows Installers.
+* a Python distribution (3.7 or later is recommended). Check the [Python Website](https://www.python.org) for Windows Installers. Please note that at present, preparing the NVDA source code requires the 32-bit version of Python 3.7.
 * Scons - [Website](https://www.scons.org/) - version 4.3.0 or later. You can install it via PIP.
 * GNU Gettext tools, if you want to have localization support for your add-on - Recommended. Any Linux distro or cygwin have those installed. You can find windows builds [here](https://gnuwin32.sourceforge.net/downlinks/gettext.php).
 * Markdown 3.3.0 or later, if you want to convert documentation files to HTML documents. You can install it via PIP.
