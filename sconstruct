@@ -299,7 +299,7 @@ for file in pythonFiles:
 createAddonHelp("addon")
 for mdFile in env.Glob(os.path.join('addon', 'doc', '*', '*.md')):
 	htmlFile = env.markdown(mdFile)
-	env.Depends(htmlFile, mdFile)
+	env.Depends(htmlFile, [mdFile, moFile])
 	env.Depends(addon, htmlFile)
 
 # Pot target
