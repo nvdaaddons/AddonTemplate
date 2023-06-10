@@ -299,7 +299,12 @@ for file in pythonFiles:
 createAddonHelp("addon")
 for mdFile in env.Glob(os.path.join('addon', 'doc', '*', '*.md')):
 	htmlFile = env.markdown(mdFile)
-	env.Depends(htmlFile, [mdFile, moFile])
+	try:  # It is possible that no moFile was set, because an add-on has no translations.
+		moFile
+	except NameError:  # Runs if there is no moFile
+		env.Depends(htmlFile, mdFile)
+	else:  # Runs if there is a moFile
+		env.Depends(htmlFile, [mdFile, moFile])
 	env.Depends(addon, htmlFile)
 
 # Pot target
