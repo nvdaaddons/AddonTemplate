@@ -279,9 +279,11 @@ addon = env.NVDAAddon(addonFile, env.Dir('addon'))
 langDirs = [f for f in env.Glob(os.path.join("addon", "locale", "*"))]
 
 # Allow all NVDA's gettext po files to be compiled in source/locale, and manifest files to be generated
+moByLang = {}
 for dir in langDirs:
 	poFile = dir.File(os.path.join("LC_MESSAGES", "nvda.po"))
 	moFile = env.gettextMoFile(poFile)
+	moByLang[dir] = moFile
 	env.Depends(moFile, poFile)
 	translatedManifest = env.NVDATranslatedManifest(
 		dir.File("manifest.ini"),
@@ -298,13 +300,14 @@ for file in pythonFiles:
 # We need at least doc in English and should enable the Help button for the add-on in Add-ons Manager
 createAddonHelp("addon")
 for mdFile in env.Glob(os.path.join('addon', 'doc', '*', '*.md')):
+	# the title of the html file is translated based on the contents of something in the moFile for a language.
+	# Thus, we find the moFile for this language and depend on it if it exists.
+	lang = os.path.basename(os.path.dirname(mdFile.get_abspath()))
+	moFile = moByLang.get(lang)
 	htmlFile = env.markdown(mdFile)
-	try:  # It is possible that no moFile was set, because an add-on has no translations.
-		moFile
-	except NameError:  # Runs if there is no moFile
-		env.Depends(htmlFile, mdFile)
-	else:  # Runs if there is a moFile
-		env.Depends(htmlFile, [mdFile, moFile])
+	env.Depends(htmlFile, mdFile)
+	if moFile:
+		env.Depends(htmlFile, moFile)
 	env.Depends(addon, htmlFile)
 
 # Pot target
