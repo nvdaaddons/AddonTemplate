@@ -5,7 +5,8 @@
 	"recommendations": [
 		"ms-python.python",
 		"ms-python.vscode-pylance",
-		"redhat.vscode-yaml"
+		"redhat.vscode-yaml",
+		"ms-python.flake8" // flake8 extension version <= v2023.4.0
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": []
