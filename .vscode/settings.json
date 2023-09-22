@@ -10,7 +10,7 @@
     "python.autoComplete.extraPaths": [
         "../nvda/source",
         "../nvda/miscDeps/python"
-        ],	
+    ],
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
     "editor.insertSpaces": false,
@@ -19,5 +19,5 @@
         "../nvda/source",
         "../nvda/miscDeps/python"
     ],
-    "python.defaultInterpreterPath": "../nvda/.venv/scripts/python.exe"
+    "python.defaultInterpreterPath": "${workspaceFolder}/../nvda/.venv/scripts/python.exe"
 }
