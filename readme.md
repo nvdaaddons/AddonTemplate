@@ -5,18 +5,15 @@ For details about NVDA add-on development, please see the [NVDA Add-on Developme
 The NVDA add-on development/discussion list [is here](https://nvda-addons.groups.io/g/nvda-addons)
 Information specific to NV Access add-on store [can be found here](https://github.com/nvaccess/addon-datastore).
 
-Copyright (C) 2012-2023 NVDA Add-on team contributors.
+Copyright (C) 2012-2024 NVDA Add-on team contributors.
 
 This package is distributed under the terms of the GNU General Public License, version 2 or later. Please see the file COPYING.txt for further details.
-
-
 
 [alekssamos](https://github.com/alekssamos/) added automatic package of add-ons through Github Actions.
 
 For details about Github Actions  please see the [Workflow syntax for GitHub Actions](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions).
 
 Copyright (C) 2022 alekssamos
-
 
 ## Features
 
@@ -49,8 +46,8 @@ In addition, this template includes configuration files for the following tools 
 
 You need the following software to use this code for your NVDA add-on development and packaging:
 
-* a Python distribution (3.7 or later is recommended). Check the [Python Website](https://www.python.org) for Windows Installers. Please note that at present, preparing the NVDA source code requires the 32-bit version of Python 3.7.
-* Scons - [Website](https://www.scons.org/) - version 4.3.0 or later. You can install it via PIP.
+* a Python distribution (3.11 or later is recommended). Check the [Python Website](https://www.python.org) for Windows Installers. Please note that at present, preparing the NVDA source code requires the 32-bit version of Python 3.11.
+* Scons - [Website](https://www.scons.org/) - version 4.5.2 or later. You can install it via PIP.
 * GNU Gettext tools, if you want to have localization support for your add-on - Recommended. Any Linux distro or cygwin have those installed. You can find windows builds [here](https://gnuwin32.sourceforge.net/downlinks/gettext.php).
 * Markdown 3.3.0 or later, if you want to convert documentation files to HTML documents. You can install it via PIP.
 
