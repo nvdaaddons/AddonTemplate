@@ -88,11 +88,11 @@ and file:
 An add-on manifest generated manually or via `buildVars.py` must include the following information:
 
 * Name (string): a unique identifier for the add-on. It must use camel case (e.g. someModule). This is also used as part of add-on store to identify the add-on uniquely.
-* Summary (string): name as shown on NVDA's Add-ons Manager.
+* Summary (string): name as shown on NVDA's Add-on store.
 * Description (string): a short detailed description about the add-on.
 * Version (string), ideally number.number with an optional third number, denoting major.minor.patch.
 * Author (string and an email address): one or more add-on author contact information in the form "name <email@address>".
-* URL (string): a web address where the add-on information can be found (typically community add-ons website address (https://addons.nvda-project.org) is used).
+* URL (string): a web address where the add-on information can be found such as add-on repository.
 * docFileName (string): name of the documentation file.
 * minimumNVDAVersion (year.major or year.major.minor): the earliest version of NVDA the add-on is compatible with (e.g. 2019.3). Add-ons are expected to use features introduced in this version of NVDA or declare compatibility with it.
 * lastTestedNVDAVersion (year.major or year.major.minor): the latest or last tested version of NVDA the add-on is said to be compatible with (e.g. 2020.3). Add-on authors are expected to declare this value after testing add-ons with the version of NVDA specified.
