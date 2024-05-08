@@ -51,12 +51,12 @@ def md2html(source, dest):
 	# Optimization: build resulting HTML text in one go instead of writing parts separately.
 	docText = "\n".join([
 		"<!DOCTYPE html>",
-		"<html lang=\"%s\">" % lang,
+		f"<html lang=\"{lang}\">",
 		"<head>",
 		"<meta charset=\"UTF-8\">"
 		"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
 		"<link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\" media=\"screen\">",
-		"<title>%s</title>" % title,
+		f"<title>{title}</title>",
 		"</head>\n<body>",
 		htmlText,
 		"</body>\n</html>"
@@ -68,7 +68,7 @@ def md2html(source, dest):
 def mdTool(env):
 	mdAction = env.Action(
 		lambda target, source, env: md2html(source[0].path, target[0].path),
-		lambda target, source, env: 'Generating % s' % target[0],
+		lambda target, source, env: f"Generating {target[0]}",
 	)
 	mdBuilder = env.Builder(
 		action=mdAction,
@@ -121,7 +121,7 @@ addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
 def addonGenerator(target, source, env, for_signature):
 	action = env.Action(
 		lambda target, source, env: createAddonBundleFromPath(source[0].abspath, target[0].abspath) and None,
-		lambda target, source, env: "Generating Addon %s" % target[0]
+		lambda target, source, env: f"Generating Addon {target[0]}"
 	)
 	return action
 
@@ -129,7 +129,7 @@ def addonGenerator(target, source, env, for_signature):
 def manifestGenerator(target, source, env, for_signature):
 	action = env.Action(
 		lambda target, source, env: generateManifest(source[0].abspath, target[0].abspath) and None,
-		lambda target, source, env: "Generating manifest %s" % target[0]
+		lambda target, source, env: f"Generating manifest {target[0]}"
 	)
 	return action
 
@@ -139,7 +139,7 @@ def translatedManifestGenerator(target, source, env, for_signature):
 	lang = os.path.basename(dir)
 	action = env.Action(
 		lambda target, source, env: generateTranslatedManifest(source[1].abspath, lang, target[0].abspath) and None,
-		lambda target, source, env: "Generating translated manifest %s" % target[0]
+		lambda target, source, env: f"Generating translated manifest {target[0]}"
 	)
 	return action
 
