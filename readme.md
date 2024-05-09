@@ -1,4 +1,4 @@
-# NVDA Add-on Scons Template #
+# NVDA Add-on Scons Template
 
 This package contains a basic template structure for NVDA add-on development, building, distribution and localization.
 For details about NVDA add-on development, please see the [NVDA Add-on Development Guide](https://github.com/nvdaaddons/DevGuide/wiki/NVDA-Add-on-Development-Guide).
@@ -30,7 +30,6 @@ This template provides the following features you can use during NVDA add-on dev
 	* To generate a gettext pot file, please run `scons pot`. An `addon-name.pot` file will be created with all gettext messages for your add-on. You need to check the `buildVars.i18nSources` variable to comply with your requirements.
 * Automatic generation of manifest localization files directly from gettext po files. Please make sure buildVars.py is included in i18nFiles.
 * Automatic generation of HTML documents from markdown (.md) files, to manage documentation in different languages.
-* Automatic generation of entries for NV Access add-on store (json format).
 
 In addition, this template includes configuration files for the following tools for use in add-on development and testing (see "additional tools" section for details):
 
@@ -80,7 +79,7 @@ and file:
 .pre-commit-config.yaml
 ```
 4. Create an `addon` folder inside your new folder. You will put your code in the usual folders for NVDA extensions, under the `addon` folder. For instance: `globalPlugins`, `synthDrivers`, etc.
-5. In the `buildVars.py` file, change variable `addon_info` with your add-on's information (name, summary, description, version, author, url, source url, license, and license URL). Also, be sure to carefully set the paths contained in the other variables in that file.
+5. In the `buildVars.py` file, change variable `addon_info` with your add-on's information (name, summary, description, version, author, url, source url, license, and license URL). Also, be sure to carefully set the paths contained in the other variables in that file. If you need to use custom Markdown extensions, original add-on interface language is not English, or include custom braille translations tables, be sure to fil out markdown list, base language variable, and braille tables dictioanry, respectively.
 6. Gettext translations must be placed into `addon\locale\<lang>/LC_MESSAGES\nvda.po`.
 
 #### Add-on manifest specification
@@ -98,11 +97,23 @@ An add-on manifest generated manually or via `buildVars.py` must include the fol
 * lastTestedNVDAVersion (year.major or year.major.minor): the latest or last tested version of NVDA the add-on is said to be compatible with (e.g. 2020.3). Add-on authors are expected to declare this value after testing add-ons with the version of NVDA specified.
 * addon_updateChannel (string or None): the update channel for the add-on release.
 
-In addition, the following information must be filled out (not used in the manifest but used elsewhere such as add-on store):
+In addition, the following information must be filled out (not used in the manifest but used elsewhere such as add-on store) in buildVars:
 
 * sourceURL (string): repository URL for the add-on source code.
 * license (string): the license of the add-on and its source code.
 * licenseURL: the URL for the license file.
+
+##### Custom add-on information
+
+In addition to the core manifest data, custom add-on information can be specified. As of 2024, the template supports generation of custom braille translation tables. Information on custom braille tables must be specified in buildVars under `braileTables` dictionary as follows:
+
+* Table name (string key for a nested dictionary): each `brailleTables` entry is a filename for the included custom braille table placed in `brailleTables` folder inside `addon` folder. This nested dictionary should specify:
+	* displayName (string): the name of the table shown to users and is translatable.
+	* contracted (True/False): is this a contracted braille table (True) or uncontracted (False).
+	* output (True/False): the table can be listed in output table list in NVDA's braille settings.
+	* input (True/False): braille can be entered using this table and listed in input table list in NVDA's braille settings.
+
+Note: you must fill out this dictionary if at least one custom braille table is included in the add-on. If not, leave the dictionary empty.
 
 ### To manage documentation files for your addon:
 
