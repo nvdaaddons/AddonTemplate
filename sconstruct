@@ -177,10 +177,20 @@ def createAddonBundleFromPath(path, dest):
 
 
 def generateManifest(source, dest):
+	# Prepare the root manifest section
 	addon_info = buildVars.addon_info
 	with codecs.open(source, "r", "utf-8") as f:
 		manifest_template = f.read()
 	manifest = manifest_template.format(**addon_info)
+	# Add additional manifest sections such as custom braile tables
+	# Custom braille translation tables
+	if buildVars.brailleTables:
+		manifest_brailleTables = ["\n[brailleTables]"]
+		for table in buildVars.brailleTables.keys():
+			manifest_brailleTables.append(f"[[{table}]]")
+			for key, val in buildVars.brailleTables[table].items():
+				manifest_brailleTables.append(f"{key} = {val}")
+		manifest += "\n".join(manifest_brailleTables)
 	with codecs.open(dest, "w", "utf-8") as f:
 		f.write(manifest)
 
@@ -193,6 +203,15 @@ def generateTranslatedManifest(source, language, out):
 	with codecs.open(source, "r", "utf-8") as f:
 		manifest_template = f.read()
 	result = manifest_template.format(**vars)
+	# Add additional manifest sections such as custom braile tables
+	# Custom braille translation tables
+	if buildVars.brailleTables:
+		result_brailleTables = ["\n[brailleTables]"]
+		for table in buildVars.brailleTables.keys():
+			result_brailleTables.append(f"[[{table}]]")
+			# Fetch display name only.
+			result_brailleTables.append(f"displayName = {buildVars.brailleTables[table]["displayName"]}")
+		result += "\n".join(result_brailleTables)
 	with codecs.open(out, "w", "utf-8") as f:
 		f.write(result)
 
