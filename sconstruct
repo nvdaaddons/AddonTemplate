@@ -184,7 +184,7 @@ def generateManifest(source, dest):
 	manifest = manifest_template.format(**addon_info)
 	# Add additional manifest sections such as custom braile tables
 	# Custom braille translation tables
-	if buildVars.brailleTables:
+	if getattr(buildVars, "brailleTables", {}):
 		manifest_brailleTables = ["\n[brailleTables]"]
 		for table in buildVars.brailleTables.keys():
 			manifest_brailleTables.append(f"[[{table}]]")
@@ -205,7 +205,7 @@ def generateTranslatedManifest(source, language, out):
 	result = manifest_template.format(**vars)
 	# Add additional manifest sections such as custom braile tables
 	# Custom braille translation tables
-	if buildVars.brailleTables:
+	if getattr(buildVars, "brailleTables", {}):
 		result_brailleTables = ["\n[brailleTables]"]
 		for table in buildVars.brailleTables.keys():
 			result_brailleTables.append(f"[[{table}]]")
