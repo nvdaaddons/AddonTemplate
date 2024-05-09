@@ -190,7 +190,7 @@ def generateManifest(source, dest):
 			manifest_brailleTables.append(f"[[{table}]]")
 			for key, val in buildVars.brailleTables[table].items():
 				manifest_brailleTables.append(f"{key} = {val}")
-		manifest += "\n".join(manifest_brailleTables)
+		manifest += f"{'\n'.join(manifest_brailleTables)}\n"
 	with codecs.open(dest, "w", "utf-8") as f:
 		f.write(manifest)
 
@@ -211,7 +211,7 @@ def generateTranslatedManifest(source, language, out):
 			result_brailleTables.append(f"[[{table}]]")
 			# Fetch display name only.
 			result_brailleTables.append(f"displayName = {buildVars.brailleTables[table]["displayName"]}")
-		result += "\n".join(result_brailleTables)
+		result += f"{'\n'.join(result_brailleTables)}\n"
 	with codecs.open(out, "w", "utf-8") as f:
 		f.write(result)
 
