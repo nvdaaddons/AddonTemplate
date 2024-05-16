@@ -210,7 +210,7 @@ def generateTranslatedManifest(source, language, out):
 		for table in buildVars.brailleTables.keys():
 			result_brailleTables.append(f"[[{table}]]")
 			# Fetch display name only.
-			result_brailleTables.append(f"displayName = {buildVars.brailleTables[table]["displayName"]}")
+			result_brailleTables.append(f"displayName = {buildVars.brailleTables[table]['displayName']}")
 		result += "\n".join(result_brailleTables) + "\n"
 	with codecs.open(out, "w", "utf-8") as f:
 		f.write(result)
