@@ -33,3 +33,8 @@ ignore = [
 	# indentation contains tabs
 	"W191",
 ]
+
+[tool.ruff.lint.per-file-ignores]
+# sconstruct contains many inbuilt functions not recognised by the lint,
+# so ignore F821.
+"sconstruct" = ["F821"]
