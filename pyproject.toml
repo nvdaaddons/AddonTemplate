@@ -14,6 +14,7 @@ builtins = [
 
 include = [
 	"*.py",
+	"sconstruct",
 ]
 
 exclude = [
