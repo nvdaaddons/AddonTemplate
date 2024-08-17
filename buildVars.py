@@ -87,3 +87,12 @@ markdownExtensions = []
 # output (shown in output table list),
 # input (shown in input table list).
 brailleTables = {}
+
+# Custom speech symbol dictionaries
+# Symbol dictionary files reside in the locale folder, e.g. `locale\en`, and are named `symbols-<name>.dic`.
+# If your add-on includes custom speech symbol dictionaries (most will not), fill out this dictionary.
+# Each key is the name of the dictionary,
+# with keys inside recording the following attributes:
+# displayName (name of the table shown to users and translatable),
+# mandatory (True when always enabled, False when not.
+symbolDictionaries = {}
