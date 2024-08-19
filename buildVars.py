@@ -93,6 +93,6 @@ brailleTables = {}
 # If your add-on includes custom speech symbol dictionaries (most will not), fill out this dictionary.
 # Each key is the name of the dictionary,
 # with keys inside recording the following attributes:
-# displayName (name of the table shown to users and translatable),
+# displayName (name of the speech dictionary  shown to users and translatable),
 # mandatory (True when always enabled, False when not.
 symbolDictionaries = {}

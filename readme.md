@@ -118,7 +118,7 @@ Information on custom braille tables must be specified in buildVars under `brail
 
 Note: you must fill out this dictionary if at least one custom braille table is included in the add-on. If not, leave the dictionary empty.
 
-###### SPeech symbol dictionaries
+###### Speech symbol dictionaries
 Information on custom symbol dictionaries must be specified in buildVars under `symbolDictionaries` dictionary as follows:
 
 * Dictionary name (string key for a nested dictionary): each `symbolDictionaries` entry is a name for the included custom symbol dictionary placed in `locale\<language>` folder inside `addon` folder. The file is named `symbols-<dictionary_name>.dic`. This nested dictionary should specify:
