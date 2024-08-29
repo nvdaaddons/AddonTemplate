@@ -105,7 +105,10 @@ In addition, the following information must be filled out (not used in the manif
 
 ##### Custom add-on information
 
-In addition to the core manifest data, custom add-on information can be specified. As of 2024, the template supports generation of custom braille translation tables. Information on custom braille tables must be specified in buildVars under `braileTables` dictionary as follows:
+In addition to the core manifest data, custom add-on information can be specified. 
+
+###### Braille translation tables
+Information on custom braille tables must be specified in buildVars under `brailleTables` dictionary as follows:
 
 * Table name (string key for a nested dictionary): each `brailleTables` entry is a filename for the included custom braille table placed in `brailleTables` folder inside `addon` folder. This nested dictionary should specify:
 	* displayName (string): the name of the table shown to users and is translatable.
@@ -114,6 +117,15 @@ In addition to the core manifest data, custom add-on information can be specifie
 	* input (True/False): braille can be entered using this table and listed in input table list in NVDA's braille settings.
 
 Note: you must fill out this dictionary if at least one custom braille table is included in the add-on. If not, leave the dictionary empty.
+
+###### Speech symbol dictionaries
+Information on custom symbol dictionaries must be specified in buildVars under `symbolDictionaries` dictionary as follows:
+
+* Dictionary name (string key for a nested dictionary): each `symbolDictionaries` entry is a name for the included custom symbol dictionary placed in `locale\<language>` folder inside `addon` folder. The file is named `symbols-<dictionary_name>.dic`. This nested dictionary should specify:
+	* displayName (string): the name of the dictionary shown to users and is translatable.
+	* mandatory (True/False): Always enabled (True) or optional and visible in the GUI (False)
+
+Note: you must fill out this dictionary if at least one custom symbol dictionary is included in the add-on. If not, leave the dictionary empty.
 
 ### To manage documentation files for your addon:
 

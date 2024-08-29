@@ -185,6 +185,16 @@ def generateManifest(source, dest):
 			for key, val in buildVars.brailleTables[table].items():
 				manifest_brailleTables.append(f"{key} = {val}")
 		manifest += "\n".join(manifest_brailleTables) + "\n"
+
+	# Custom speech symbol dictionaries
+	if getattr(buildVars, "symbolDictionaries", {}):
+		manifest_symbolDictionaries = ["\n[symbolDictionaries]"]
+		for dictionary in buildVars.symbolDictionaries.keys():
+			manifest_symbolDictionaries.append(f"[[{dictionary}]]")
+			for key, val in buildVars.symbolDictionaries[dictionary].items():
+				manifest_symbolDictionaries.append(f"{key} = {val}")
+		manifest += "\n".join(manifest_symbolDictionaries) + "\n"
+
 	with codecs.open(dest, "w", "utf-8") as f:
 		f.write(manifest)
 
@@ -204,8 +214,18 @@ def generateTranslatedManifest(source, language, out):
 		for table in buildVars.brailleTables.keys():
 			result_brailleTables.append(f"[[{table}]]")
 			# Fetch display name only.
-			result_brailleTables.append(f"displayName = {buildVars.brailleTables[table]['displayName']}")
+			result_brailleTables.append(f"displayName = {_(buildVars.brailleTables[table]['displayName'])}")
 		result += "\n".join(result_brailleTables) + "\n"
+
+	# Custom speech symbol dictionaries
+	if getattr(buildVars, "symbolDictionaries", {}):
+		result_symbolDictionaries = ["\n[symbolDictionaries]"]
+		for dictionary in buildVars.symbolDictionaries.keys():
+			result_symbolDictionaries.append(f"[[{dictionary}]]")
+			# Fetch display name only.
+			result_symbolDictionaries.append(f"displayName = {_(buildVars.symbolDictionaries[dictionary]['displayName'])}")
+		result += "\n".join(result_symbolDictionaries) + "\n"
+
 	with codecs.open(out, "w", "utf-8") as f:
 		f.write(result)
 
