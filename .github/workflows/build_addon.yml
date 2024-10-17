@@ -57,6 +57,8 @@ jobs:
       uses: actions/download-artifact@v3
     - name: Display structure of downloaded files
       run: ls -R
+    - name: Calculate sha256
+      run: sha256sum packaged_addon/*.nvda-addon >> changelog.md
 
     - name: Release
       uses: softprops/action-gh-release@v1
@@ -64,5 +66,6 @@ jobs:
         files: |
           packaged_addon/*.nvda-addon
           packaged_addon/*.pot
+        body_path: changelog.md
         fail_on_unmatched_files: true
         prerelease: ${{ contains(github.ref, '-') }}
