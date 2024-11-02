@@ -58,7 +58,9 @@ jobs:
     - name: Display structure of downloaded files
       run: ls -R
     - name: Calculate sha256
-      run: sha256sum packaged_addon/*.nvda-addon >> changelog.md
+      run: |
+        echo -e "\nSHA256: " >> changelog.md
+        sha256sum packaged_addon/*.nvda-addon >> changelog.md
 
     - name: Release
       uses: softprops/action-gh-release@v2
