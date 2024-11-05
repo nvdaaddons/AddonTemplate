@@ -21,12 +21,15 @@ import buildVars  # NOQA: E402
 
 def md2html(source, dest):
 	import markdown
+
 	# Use extensions if defined.
 	mdExtensions = buildVars.markdownExtensions
-	lang = os.path.basename(os.path.dirname(source)).replace('_', '-')
+	lang = os.path.basename(os.path.dirname(source)).replace("_", "-")
 	localeLang = os.path.basename(os.path.dirname(source))
 	try:
-		_ = gettext.translation("nvda", localedir=os.path.join("addon", "locale"), languages=[localeLang]).gettext
+		_ = gettext.translation(
+			"nvda", localedir=os.path.join("addon", "locale"), languages=[localeLang]
+		).gettext
 		summary = _(buildVars.addon_info["addon_summary"])
 	except Exception:
 		summary = buildVars.addon_info["addon_summary"]
@@ -34,8 +37,8 @@ def md2html(source, dest):
 		addonSummary=summary, addonVersion=buildVars.addon_info["addon_version"]
 	)
 	headerDic = {
-		"[[!meta title=\"": "# ",
-		"\"]]": " #",
+		'[[!meta title="': "# ",
+		'"]]': " #",
 	}
 	with codecs.open(source, "r", "utf-8") as f:
 		mdText = f.read()
@@ -43,18 +46,19 @@ def md2html(source, dest):
 			mdText = mdText.replace(k, v, 1)
 		htmlText = markdown.markdown(mdText, extensions=mdExtensions)
 	# Optimization: build resulting HTML text in one go instead of writing parts separately.
-	docText = "\n".join([
-		"<!DOCTYPE html>",
-		f"<html lang=\"{lang}\">",
-		"<head>",
-		"<meta charset=\"UTF-8\">"
-		"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
-		"<link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\" media=\"screen\">",
-		f"<title>{title}</title>",
-		"</head>\n<body>",
-		htmlText,
-		"</body>\n</html>"
-	])
+	docText = "\n".join(
+		[
+			"<!DOCTYPE html>",
+			f'<html lang="{lang}">',
+			"<head>",
+			'<meta charset="UTF-8">' '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+			'<link rel="stylesheet" type="text/css" href="../style.css" media="screen">',
+			f"<title>{title}</title>",
+			"</head>\n<body>",
+			htmlText,
+			"</body>\n</html>",
+		]
+	)
 	with codecs.open(dest, "w", "utf-8") as f:
 		f.write(docText)
 
@@ -66,10 +70,10 @@ def mdTool(env):
 	)
 	mdBuilder = env.Builder(
 		action=mdAction,
-		suffix='.html',
-		src_suffix='.md',
+		suffix=".html",
+		src_suffix=".md",
 	)
-	env['BUILDERS']['markdown'] = mdBuilder
+	env["BUILDERS"]["markdown"] = mdBuilder
 
 
 def validateVersionNumber(key, val, env):
@@ -90,11 +94,12 @@ vars.Add("versionNumber", "Version number of the form major.minor.patch", "0.0.0
 vars.Add(BoolVariable("dev", "Whether this is a daily development version", False))
 vars.Add("channel", "Update channel for this build", buildVars.addon_info["addon_updateChannel"])
 
-env = Environment(variables=vars, ENV=os.environ, tools=['gettexttool', mdTool])
+env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", mdTool])
 env.Append(**buildVars.addon_info)
 
 if env["dev"]:
 	import datetime
+
 	buildDate = datetime.datetime.now()
 	year, month, day = str(buildDate.year), str(buildDate.month), str(buildDate.day)
 	versionTimestamp = "".join([year, month.zfill(2), day.zfill(2)])
@@ -115,7 +120,7 @@ addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
 def addonGenerator(target, source, env, for_signature):
 	action = env.Action(
 		lambda target, source, env: createAddonBundleFromPath(source[0].abspath, target[0].abspath) and None,
-		lambda target, source, env: f"Generating Addon {target[0]}"
+		lambda target, source, env: f"Generating Addon {target[0]}",
 	)
 	return action
 
@@ -123,7 +128,7 @@ def addonGenerator(target, source, env, for_signature):
 def manifestGenerator(target, source, env, for_signature):
 	action = env.Action(
 		lambda target, source, env: generateManifest(source[0].abspath, target[0].abspath) and None,
-		lambda target, source, env: f"Generating manifest {target[0]}"
+		lambda target, source, env: f"Generating manifest {target[0]}",
 	)
 	return action
 
@@ -132,15 +137,16 @@ def translatedManifestGenerator(target, source, env, for_signature):
 	dir = os.path.abspath(os.path.join(os.path.dirname(str(source[0])), ".."))
 	lang = os.path.basename(dir)
 	action = env.Action(
-		lambda target, source, env: generateTranslatedManifest(source[1].abspath, lang, target[0].abspath) and None,
-		lambda target, source, env: f"Generating translated manifest {target[0]}"
+		lambda target, source, env: generateTranslatedManifest(source[1].abspath, lang, target[0].abspath)
+		and None,
+		lambda target, source, env: f"Generating translated manifest {target[0]}",
 	)
 	return action
 
 
-env['BUILDERS']['NVDAAddon'] = Builder(generator=addonGenerator)
-env['BUILDERS']['NVDAManifest'] = Builder(generator=manifestGenerator)
-env['BUILDERS']['NVDATranslatedManifest'] = Builder(generator=translatedManifestGenerator)
+env["BUILDERS"]["NVDAAddon"] = Builder(generator=addonGenerator)
+env["BUILDERS"]["NVDAManifest"] = Builder(generator=manifestGenerator)
+env["BUILDERS"]["NVDATranslatedManifest"] = Builder(generator=translatedManifestGenerator)
 
 
 def createAddonHelp(dir):
@@ -156,9 +162,9 @@ def createAddonHelp(dir):
 
 
 def createAddonBundleFromPath(path, dest):
-	""" Creates a bundle from a directory that contains an addon manifest file."""
+	"""Creates a bundle from a directory that contains an addon manifest file."""
 	basedir = os.path.abspath(path)
-	with zipfile.ZipFile(dest, 'w', zipfile.ZIP_DEFLATED) as z:
+	with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED) as z:
 		# FIXME: the include/exclude feature may or may not be useful. Also python files can be pre-compiled.
 		for dir, dirnames, filenames in os.walk(basedir):
 			relativePath = os.path.relpath(dir, basedir)
@@ -223,7 +229,9 @@ def generateTranslatedManifest(source, language, out):
 		for dictionary in buildVars.symbolDictionaries.keys():
 			result_symbolDictionaries.append(f"[[{dictionary}]]")
 			# Fetch display name only.
-			result_symbolDictionaries.append(f"displayName = {_(buildVars.symbolDictionaries[dictionary]['displayName'])}")
+			result_symbolDictionaries.append(
+				f"displayName = {_(buildVars.symbolDictionaries[dictionary]['displayName'])}"
+			)
 		result += "\n".join(result_symbolDictionaries) + "\n"
 
 	with codecs.open(out, "w", "utf-8") as f:
@@ -234,7 +242,7 @@ def expandGlobs(files):
 	return [f for pattern in files for f in env.Glob(pattern)]
 
 
-addon = env.NVDAAddon(addonFile, env.Dir('addon'))
+addon = env.NVDAAddon(addonFile, env.Dir("addon"))
 
 langDirs = [f for f in env.Glob(os.path.join("addon", "locale", "*"))]
 
@@ -244,8 +252,7 @@ for dir in langDirs:
 	moFile = env.gettextMoFile(poFile)
 	env.Depends(moFile, poFile)
 	translatedManifest = env.NVDATranslatedManifest(
-		dir.File("manifest.ini"),
-		[moFile, os.path.join("manifest-translated.ini.tpl")]
+		dir.File("manifest.ini"), [moFile, os.path.join("manifest-translated.ini.tpl")]
 	)
 	env.Depends(translatedManifest, ["buildVars.py"])
 	env.Depends(addon, [translatedManifest, moFile])
@@ -257,7 +264,7 @@ for file in pythonFiles:
 # Convert markdown files to html
 # We need at least doc in English and should enable the Help button for the add-on in Add-ons Manager
 createAddonHelp("addon")
-for mdFile in env.Glob(os.path.join('addon', 'doc', '*', '*.md')):
+for mdFile in env.Glob(os.path.join("addon", "doc", "*", "*.md")):
 	htmlFile = env.markdown(mdFile)
 	try:  # It is possible that no moFile was set, because an add-on has no translations.
 		moFile
@@ -270,16 +277,16 @@ for mdFile in env.Glob(os.path.join('addon', 'doc', '*', '*.md')):
 # Pot target
 i18nFiles = expandGlobs(buildVars.i18nSources)
 gettextvars = {
-	'gettext_package_bugs_address': 'nvda-translations@groups.io',
-	'gettext_package_name': buildVars.addon_info['addon_name'],
-	'gettext_package_version': buildVars.addon_info['addon_version']
+	"gettext_package_bugs_address": "nvda-translations@groups.io",
+	"gettext_package_name": buildVars.addon_info["addon_name"],
+	"gettext_package_version": buildVars.addon_info["addon_version"],
 }
 
 pot = env.gettextPotFile("${addon_name}.pot", i18nFiles, **gettextvars)
-env.Alias('pot', pot)
+env.Alias("pot", pot)
 env.Depends(pot, i18nFiles)
 mergePot = env.gettextMergePotFile("${addon_name}-merge.pot", i18nFiles, **gettextvars)
-env.Alias('mergePot', mergePot)
+env.Alias("mergePot", mergePot)
 env.Depends(mergePot, i18nFiles)
 
 # Generate Manifest path
@@ -289,4 +296,4 @@ env.Depends(manifest, "buildVars.py")
 
 env.Depends(addon, manifest)
 env.Default(addon)
-env.Clean(addon, ['.sconsign.dblite', 'addon/doc/' + buildVars.baseLanguage + '/'])
+env.Clean(addon, [".sconsign.dblite", "addon/doc/" + buildVars.baseLanguage + "/"])
