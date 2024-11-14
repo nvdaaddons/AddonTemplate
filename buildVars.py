@@ -69,6 +69,7 @@ excludedFiles = []
 # Base language for the NVDA add-on
 # If your add-on is written in a language other than english, modify this variable.
 # For example, set baseLanguage to "es" if your add-on is primarily written in spanish.
+# You must also edit .gitignore file to specify base language files to be ignored.
 baseLanguage = "en"
 
 # Markdown extensions for add-on documentation
