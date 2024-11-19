@@ -1,22 +1,19 @@
-# NVDA Add-on Scons Template #
+# NVDA Add-on Scons Template
 
 This package contains a basic template structure for NVDA add-on development, building, distribution and localization.
 For details about NVDA add-on development, please see the [NVDA Add-on Development Guide](https://github.com/nvdaaddons/DevGuide/wiki/NVDA-Add-on-Development-Guide).
 The NVDA add-on development/discussion list [is here](https://nvda-addons.groups.io/g/nvda-addons)
 Information specific to NV Access add-on store [can be found here](https://github.com/nvaccess/addon-datastore).
 
-Copyright (C) 2012-2023 NVDA Add-on team contributors.
+Copyright (C) 2012-2024 NVDA Add-on team contributors.
 
 This package is distributed under the terms of the GNU General Public License, version 2 or later. Please see the file COPYING.txt for further details.
-
-
 
 [alekssamos](https://github.com/alekssamos/) added automatic package of add-ons through Github Actions.
 
 For details about Github Actions  please see the [Workflow syntax for GitHub Actions](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions).
 
 Copyright (C) 2022 alekssamos
-
 
 ## Features
 
@@ -33,11 +30,10 @@ This template provides the following features you can use during NVDA add-on dev
 	* To generate a gettext pot file, please run `scons pot`. An `addon-name.pot` file will be created with all gettext messages for your add-on. You need to check the `buildVars.i18nSources` variable to comply with your requirements.
 * Automatic generation of manifest localization files directly from gettext po files. Please make sure buildVars.py is included in i18nFiles.
 * Automatic generation of HTML documents from markdown (.md) files, to manage documentation in different languages.
-* Automatic generation of entries for NV Access add-on store (json format).
 
 In addition, this template includes configuration files for the following tools for use in add-on development and testing (see "additional tools" section for details):
 
-* Flake8 (flake8.ini): a base configuration file for Flake8 linting tool based on NVDA's own Flake8 configuration file.
+* Ruff (pyproject.toml/tool.ruff sections): a Python linter written in Rust. Sections starting with tool.ruff house configuration options for Ruff.
 * Configuration for VS Code. It requires NVDA's repo at the same level as the add-on folder containing your actual source files, with prepared source code (`scons source`). preparing the source code is a step in the instructions for building NVDA itself, see [The NVDA Repository](https://github.com/nvaccess/nvda) for details.
         * Place the .vscode in this repo within the addon folder, where your add-on source files (will) reside. The settings file within this folder assumes the NVDA repository is within the parent folder of this folder. If your addon folder is within the addonTemplate folder, then your NVDA repository folder needs to also be within the addonTemplate folder, or the source will not be found.
         * Open the addon folder in VS Code. This should initialize VS Code with the correct settings and provide you with code completion and other VS Code features. 
@@ -49,8 +45,8 @@ In addition, this template includes configuration files for the following tools 
 
 You need the following software to use this code for your NVDA add-on development and packaging:
 
-* a Python distribution (3.7 or later is recommended). Check the [Python Website](https://www.python.org) for Windows Installers. Please note that at present, preparing the NVDA source code requires the 32-bit version of Python 3.7.
-* Scons - [Website](https://www.scons.org/) - version 4.3.0 or later. You can install it via PIP.
+* a Python distribution (3.11 or later is recommended). Check the [Python Website](https://www.python.org) for Windows Installers. Please note that at present, preparing the NVDA source code requires the 32-bit version of Python 3.11.
+* Scons - [Website](https://www.scons.org/) - version 4.5.2 or later. You can install it via PIP.
 * GNU Gettext tools, if you want to have localization support for your add-on - Recommended. Any Linux distro or cygwin have those installed. You can find windows builds [here](https://gnuwin32.sourceforge.net/downlinks/gettext.php).
 * Markdown 3.3.0 or later, if you want to convert documentation files to HTML documents. You can install it via PIP.
 
@@ -83,7 +79,7 @@ and file:
 .pre-commit-config.yaml
 ```
 4. Create an `addon` folder inside your new folder. You will put your code in the usual folders for NVDA extensions, under the `addon` folder. For instance: `globalPlugins`, `synthDrivers`, etc.
-5. In the `buildVars.py` file, change variable `addon_info` with your add-on's information (name, summary, description, version, author, url, source url, license, and license URL). Also, be sure to carefully set the paths contained in the other variables in that file.
+5. In the `buildVars.py` file, change variable `addon_info` with your add-on's information (name, summary, description, version, author, url, source url, license, and license URL). Also, be sure to carefully set the paths contained in the other variables in that file. If you need to use custom Markdown extensions, original add-on interface language is not English, or include custom braille translations tables, be sure to fil out markdown list, base language variable, and braille tables dictioanry, respectively.
 6. Gettext translations must be placed into `addon\locale\<lang>/LC_MESSAGES\nvda.po`.
 
 #### Add-on manifest specification
@@ -91,21 +87,45 @@ and file:
 An add-on manifest generated manually or via `buildVars.py` must include the following information:
 
 * Name (string): a unique identifier for the add-on. It must use camel case (e.g. someModule). This is also used as part of add-on store to identify the add-on uniquely.
-* Summary (string): name as shown on NVDA's Add-ons Manager.
+* Summary (string): name as shown on NVDA's Add-on store.
 * Description (string): a short detailed description about the add-on.
 * Version (string), ideally number.number with an optional third number, denoting major.minor.patch.
 * Author (string and an email address): one or more add-on author contact information in the form "name <email@address>".
-* URL (string): a web address where the add-on information can be found (typically community add-ons website address (https://addons.nvda-project.org) is used).
+* URL (string): a web address where the add-on information can be found such as add-on repository.
 * docFileName (string): name of the documentation file.
 * minimumNVDAVersion (year.major or year.major.minor): the earliest version of NVDA the add-on is compatible with (e.g. 2019.3). Add-ons are expected to use features introduced in this version of NVDA or declare compatibility with it.
 * lastTestedNVDAVersion (year.major or year.major.minor): the latest or last tested version of NVDA the add-on is said to be compatible with (e.g. 2020.3). Add-on authors are expected to declare this value after testing add-ons with the version of NVDA specified.
 * addon_updateChannel (string or None): the update channel for the add-on release.
 
-In addition, the following information must be filled out (not used in the manifest but used elsewhere such as add-on store):
+In addition, the following information must be filled out (not used in the manifest but used elsewhere such as add-on store) in buildVars:
 
 * sourceURL (string): repository URL for the add-on source code.
 * license (string): the license of the add-on and its source code.
 * licenseURL: the URL for the license file.
+
+##### Custom add-on information
+
+In addition to the core manifest data, custom add-on information can be specified. 
+
+###### Braille translation tables
+Information on custom braille tables must be specified in buildVars under `brailleTables` dictionary as follows:
+
+* Table name (string key for a nested dictionary): each `brailleTables` entry is a filename for the included custom braille table placed in `brailleTables` folder inside `addon` folder. This nested dictionary should specify:
+	* displayName (string): the name of the table shown to users and is translatable.
+	* contracted (True/False): is this a contracted braille table (True) or uncontracted (False).
+	* output (True/False): the table can be listed in output table list in NVDA's braille settings.
+	* input (True/False): braille can be entered using this table and listed in input table list in NVDA's braille settings.
+
+Note: you must fill out this dictionary if at least one custom braille table is included in the add-on. If not, leave the dictionary empty.
+
+###### Speech symbol dictionaries
+Information on custom symbol dictionaries must be specified in buildVars under `symbolDictionaries` dictionary as follows:
+
+* Dictionary name (string key for a nested dictionary): each `symbolDictionaries` entry is a name for the included custom symbol dictionary placed in `locale\<language>` folder inside `addon` folder. The file is named `symbols-<dictionary_name>.dic`. This nested dictionary should specify:
+	* displayName (string): the name of the dictionary shown to users and is translatable.
+	* mandatory (True/False): Always enabled (True) or optional and visible in the GUI (False)
+
+Note: you must fill out this dictionary if at least one custom symbol dictionary is included in the add-on. If not, leave the dictionary empty.
 
 ### To manage documentation files for your addon:
 
@@ -126,7 +146,7 @@ In addition, the following information must be filled out (not used in the manif
 
 The template includes configuration files for use with additional tools such as linters. These include:
 
-* Flake8 (flake8.ini): a Python code linter (3.7.9 or later, can be installed with PIP).
+* Ruff (pyproject.toml): a Python linter written in Rust (0.4.10 or later, can be installed with PIP).
 
 Read the documentation for the tools you wish to use when building and developing add-ons.
 
