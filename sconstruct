@@ -266,7 +266,7 @@ for file in pythonFiles:
 # Convert markdown files to html
 # We need at least doc in English and should enable the Help button for the add-on in Add-ons Manager
 createAddonHelp("addon")
-for mdFile in env.Glob(os.path.join('addon', 'doc', '*', '*.md')):
+for mdFile in env.Glob(os.path.join("addon", "doc", "*", "*.md")):
 	# the title of the html file is translated based on the contents of something in the moFile for a language.
 	# Thus, we find the moFile for this language and depend on it if it exists.
 	lang = os.path.basename(os.path.dirname(mdFile.get_abspath()))
