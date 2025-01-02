@@ -5,7 +5,7 @@ For details about NVDA add-on development, please see the [NVDA Add-on Developme
 The NVDA add-on development/discussion list [is here](https://nvda-addons.groups.io/g/nvda-addons)
 Information specific to NV Access add-on store [can be found here](https://github.com/nvaccess/addon-datastore).
 
-Copyright (C) 2012-2024 NVDA Add-on team contributors.
+Copyright (C) 2012-2025 NVDA Add-on team contributors.
 
 This package is distributed under the terms of the GNU General Public License, version 2 or later. Please see the file COPYING.txt for further details.
 
@@ -35,8 +35,8 @@ In addition, this template includes configuration files for the following tools 
 
 * Ruff (pyproject.toml/tool.ruff sections): a Python linter written in Rust. Sections starting with tool.ruff house configuration options for Ruff.
 * Configuration for VS Code. It requires NVDA's repo at the same level as the add-on folder containing your actual source files, with prepared source code (`scons source`). preparing the source code is a step in the instructions for building NVDA itself, see [The NVDA Repository](https://github.com/nvaccess/nvda) for details.
-        * Place the .vscode in this repo within the addon folder, where your add-on source files (will) reside. The settings file within this folder assumes the NVDA repository is within the parent folder of this folder. If your addon folder is within the addonTemplate folder, then your NVDA repository folder needs to also be within the addonTemplate folder, or the source will not be found.
-        * Open the addon folder in VS Code. This should initialize VS Code with the correct settings and provide you with code completion and other VS Code features. 
+	* Place the .vscode in this repo within the addon folder, where your add-on source files (will) reside. The settings file within this folder assumes the NVDA repository is within the parent folder of this folder. If your addon folder is within the addonTemplate folder, then your NVDA repository folder needs to also be within the addonTemplate folder, or the source will not be found.
+	* Open the addon folder in VS Code. This should initialize VS Code with the correct settings and provide you with code completion and other VS Code features. 
 	* Press `control+shift+m` after saving a file to search for problems.
 	* Use arrow and tab keys for the autocompletion feature.
 	* Press `control+shift+p` to open the commands palette and search for recommended extensions to install or check if they are installed.
@@ -46,9 +46,9 @@ In addition, this template includes configuration files for the following tools 
 You need the following software to use this code for your NVDA add-on development and packaging:
 
 * a Python distribution (3.11 or later is recommended). Check the [Python Website](https://www.python.org) for Windows Installers. Please note that at present, preparing the NVDA source code requires the 32-bit version of Python 3.11.
-* Scons - [Website](https://www.scons.org/) - version 4.5.2 or later. You can install it via PIP.
+* Scons - [Website](https://www.scons.org/) - version 4.8.1 or later. You can install it via PIP.
 * GNU Gettext tools, if you want to have localization support for your add-on - Recommended. Any Linux distro or cygwin have those installed. You can find windows builds [here](https://gnuwin32.sourceforge.net/downlinks/gettext.php).
-* Markdown 3.3.0 or later, if you want to convert documentation files to HTML documents. You can install it via PIP.
+* Markdown 3.7 or later, if you want to convert documentation files to HTML documents. You can install it via PIP.
 
 Note, that you may not need these tools in a local build environment, if you are using [Appveyor](https://appveyor.com/) or [GitHub Actions](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions), to build and package your add-ons.
 
@@ -86,7 +86,7 @@ and file:
 
 An add-on manifest generated manually or via `buildVars.py` must include the following information:
 
-* Name (string): a unique identifier for the add-on. It must use camel case (e.g. someModule). This is also used as part of add-on store to identify the add-on uniquely.
+* Name (string): a unique internal identifier for the add-on. It must use camel case (e.g. someModule). This is also used as part of add-on store to identify the add-on uniquely.
 * Summary (string): name as shown on NVDA's Add-on store.
 * Description (string): a short detailed description about the add-on.
 * Version (string), ideally number.number with an optional third number, denoting major.minor.patch.
@@ -108,6 +108,7 @@ In addition, the following information must be filled out (not used in the manif
 In addition to the core manifest data, custom add-on information can be specified. 
 
 ###### Braille translation tables
+
 Information on custom braille tables must be specified in buildVars under `brailleTables` dictionary as follows:
 
 * Table name (string key for a nested dictionary): each `brailleTables` entry is a filename for the included custom braille table placed in `brailleTables` folder inside `addon` folder. This nested dictionary should specify:
@@ -119,6 +120,7 @@ Information on custom braille tables must be specified in buildVars under `brail
 Note: you must fill out this dictionary if at least one custom braille table is included in the add-on. If not, leave the dictionary empty.
 
 ###### Speech symbol dictionaries
+
 Information on custom symbol dictionaries must be specified in buildVars under `symbolDictionaries` dictionary as follows:
 
 * Dictionary name (string key for a nested dictionary): each `symbolDictionaries` entry is a name for the included custom symbol dictionary placed in `locale\<language>` folder inside `addon` folder. The file is named `symbols-<dictionary_name>.dic`. This nested dictionary should specify:
