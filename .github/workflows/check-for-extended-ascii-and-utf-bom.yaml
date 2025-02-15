@@ -1,0 +1,22 @@
+# Created by Mesar Hameed (@mhameed)
+
+name: Check that we dont have extended ascii or utf boms in our files
+
+on:
+  pull_request:
+
+jobs:
+  extendedAsciiAndBom:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: check for files known to cause problems
+      run: find  . -type f | grep -vP "^./.git" | xargs file | grep -iP "bom|extended|iso"
+    - name: 
+      if: failure()
+      uses: unsplash/comment-on-pr@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        msg: "Please note that this pull request seems to contain files other than ascii or utf8 without bom."
