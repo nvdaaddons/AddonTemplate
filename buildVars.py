@@ -17,12 +17,12 @@ def _(arg):
 addon_info = {
 	# add-on Name/identifier, internal for NVDA
 	"addon_name": "addonTemplate",
-	# Add-on summary, usually the user visible name of the addon.
-	# Translators: Summary for this add-on
-	# to be shown on installation and add-on information found in Add-ons Manager.
+	# Add-on summary/title, usually the user visible name of the add-on
+	# Translators: Summary/title for this add-on
+	# to be shown on installation and add-on information found in add-on store
 	"addon_summary": _("Add-on user visible name"),
 	# Add-on description
-	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
+	# Translators: Long description to be shown for this add-on on add-on information from add-on store
 	"addon_description": _("""Description for the add-on.
 It can span multiple lines."""),
 	# version
