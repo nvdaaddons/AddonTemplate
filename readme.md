@@ -11,7 +11,7 @@ This package is distributed under the terms of the GNU General Public License, v
 
 [alekssamos](https://github.com/alekssamos/) added automatic package of add-ons through Github Actions.
 
-For details about Github Actions  please see the [Workflow syntax for GitHub Actions](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions).
+For details about Github Actions, see the [Workflow syntax for GitHub Actions](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions).
 
 Copyright (C) 2022 alekssamos
 
