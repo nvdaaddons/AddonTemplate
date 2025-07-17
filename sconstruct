@@ -9,6 +9,7 @@ import os
 import os.path
 import zipfile
 import sys
+from pathlib import Path
 
 # Add-on localization exchange facility and the template requires Python 3.10.
 # For best practice, use Python 3.11 or later to align with NVDA development.
@@ -161,6 +162,10 @@ def createAddonHelp(dir):
 		readmePath = os.path.join(docsDir, buildVars.baseLanguage, "readme.md")
 		readmeTarget = env.Command(readmePath, "readme.md", Copy("$TARGET", "$SOURCE"))
 		env.Depends(addon, readmeTarget)
+
+
+def machesNoPatterns(path: Path, patterns: list[str]) -> bool:
+	return all([not path.match(pattern) for pattern in patterns])
 
 
 def createAddonBundleFromPath(path, dest):
