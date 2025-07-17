@@ -13,9 +13,10 @@ import sys
 # Add-on localization exchange facility and the template requires Python 3.10.
 # For best practice, use Python 3.11 or later to align with NVDA development.
 EnsurePythonVersion(3, 10)
-sys.dont_write_bytecode = True
 
 # Bytecode should not be written for build vars module to keep the repository root folder clean.
+sys.dont_write_bytecode = True
+
 import buildVars  # NOQA: E402
 
 
