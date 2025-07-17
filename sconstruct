@@ -168,18 +168,18 @@ def machesNoPatterns(path: Path, patterns: list[str]) -> bool:
 	return all([not path.match(pattern) for pattern in patterns])
 
 
-def createAddonBundleFromPath(path, dest):
+def createAddonBundleFromPath(path: str|Path, dest: str):
 	"""Creates a bundle from a directory that contains an addon manifest file."""
-	basedir = os.path.abspath(path)
+	if isinstance(path, str):
+		path = Path(path)
+	basedir = path.absolute()
 	with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED) as z:
-		# FIXME: the include/exclude feature may or may not be useful. Also python files can be pre-compiled.
-		for dir, dirnames, filenames in os.walk(basedir):
-			relativePath = os.path.relpath(dir, basedir)
-			for filename in filenames:
-				pathInBundle = os.path.join(relativePath, filename)
-				absPath = os.path.join(dir, filename)
-				if pathInBundle not in buildVars.excludedFiles:
-					z.write(absPath, pathInBundle)
+		for p in basedir.rglob("*"):
+			if p.is_dir():
+				continue
+			pathInBundle = p.relative_to(basedir)
+			if machesNoPatterns(pathInBundle, buildVars.excludedFiles):
+				z.write(p, pathInBundle)
 	return dest
 
 
