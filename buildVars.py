@@ -64,6 +64,8 @@ i18nSources = pythonSources + ["buildVars.py"]
 
 # Files that will be ignored when building the nvda-addon file
 # Paths are relative to the addon directory, not to the root directory of your addon sources.
+# You can either list every file (using ""/") as a path separator,
+# or use glob expressions.
 excludedFiles = []
 
 # Base language for the NVDA add-on
