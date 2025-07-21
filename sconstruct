@@ -292,10 +292,10 @@ gettextvars = {
 	"gettext_package_version": buildVars.addon_info["addon_version"],
 }
 
-pot = env.gettextPotFile("${addon_name}.pot", i18nFiles, **gettextvars)
+pot = env.gettextPotFile("addon/locale/messages.pot", i18nFiles, **gettextvars)
 env.Alias("pot", pot)
 env.Depends(pot, i18nFiles)
-mergePot = env.gettextMergePotFile("${addon_name}-merge.pot", i18nFiles, **gettextvars)
+mergePot = env.gettextMergePotFile("addon/locale/messages-merge.pot", i18nFiles, **gettextvars)
 env.Alias("mergePot", mergePot)
 env.Depends(mergePot, i18nFiles)
 
