@@ -251,7 +251,7 @@ def expandGlobs(files):
 
 addon = env.NVDAAddon(addonFile, env.Dir("addon"))
 
-langDirs = [f for f in env.Glob(os.path.join("addon", "locale", "*"))]
+langDirs = [f for f in env.Glob(os.path.join("addon", "locale", "*")) if f.isdir()]
 
 # Allow all NVDA's gettext po files to be compiled in source/locale, and manifest files to be generated
 moByLang = {}
