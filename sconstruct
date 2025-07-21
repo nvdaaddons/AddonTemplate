@@ -21,16 +21,21 @@ sys.dont_write_bytecode = True
 import buildVars  # NOQA: E402
 
 
-def md2html(source, dest):
+def md2html(source: str|Path, dest: str):
+	if isinstance(source, str):
+		source = Path(source)
+
 	import markdown
 
 	# Use extensions if defined.
 	mdExtensions = buildVars.markdownExtensions
-	lang = os.path.basename(os.path.dirname(source)).replace("_", "-")
-	localeLang = os.path.basename(os.path.dirname(source))
+	localeLang = source.parent.name
+	lang = localeLang.replace("_", "-")
 	try:
 		_ = gettext.translation(
-			"nvda", localedir=os.path.join("addon", "locale"), languages=[localeLang]
+			"nvda",
+			localedir=os.path.join("addon", "locale"),
+			languages=[localeLang]
 		).gettext
 		summary = _(buildVars.addon_info["addon_summary"])
 	except Exception:
@@ -42,14 +47,14 @@ def md2html(source, dest):
 		'[[!meta title="': "# ",
 		'"]]': " #",
 	}
-	with codecs.open(source, "r", "utf-8") as f:
+	with codecs.open(str(source), "r", "utf-8") as f:
 		mdText = f.read()
-		for k, v in headerDic.items():
-			mdText = mdText.replace(k, v, 1)
-		htmlText = markdown.markdown(mdText, extensions=mdExtensions)
+	for k, v in headerDic.items():
+		mdText = mdText.replace(k, v, 1)
+	htmlText = markdown.markdown(mdText, extensions=mdExtensions)
 	# Optimization: build resulting HTML text in one go instead of writing parts separately.
 	docText = "\n".join(
-		[
+		(
 			"<!DOCTYPE html>",
 			f'<html lang="{lang}">',
 			"<head>",
@@ -60,7 +65,7 @@ def md2html(source, dest):
 			"</head>\n<body>",
 			htmlText,
 			"</body>\n</html>",
-		]
+		)
 	)
 	with codecs.open(dest, "w", "utf-8") as f:
 		f.write(docText)
