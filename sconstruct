@@ -174,7 +174,7 @@ def createAddonHelp(dir: str|Path):
 		env.Depends(addon, readmeTarget)
 
 
-def machesNoPatterns(path: Path, patterns: list[str]) -> bool:
+def matchesNoPatterns(path: Path, patterns: list[str]) -> bool:
 	return all([not path.match(pattern) for pattern in patterns])
 
 
@@ -188,7 +188,7 @@ def createAddonBundleFromPath(path: str|Path, dest: str):
 			if p.is_dir():
 				continue
 			pathInBundle = p.relative_to(basedir)
-			if machesNoPatterns(pathInBundle, buildVars.excludedFiles):
+			if matchesNoPatterns(pathInBundle, buildVars.excludedFiles):
 				z.write(p, pathInBundle)
 	return dest
 
