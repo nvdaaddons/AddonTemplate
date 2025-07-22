@@ -84,16 +84,16 @@ def mdTool(env):
 	env["BUILDERS"]["markdown"] = mdBuilder
 
 
-def validateVersionNumber(key, val, env):
+def validateVersionNumber(key: str, val: str, _):
 	# Used to make sure version major.minor.patch are integers to comply with NV Access add-on store.
 	# Ignore all this if version number is not specified.
 	if val == "0.0.0":
 		return
 	versionNumber = val.split(".")
 	if len(versionNumber) < 3:
-		raise ValueError("versionNumber must have three parts (major.minor.patch)")
+		raise ValueError(f"{key} must have three parts (major.minor.patch)")
 	if not all([part.isnumeric() for part in versionNumber]):
-		raise ValueError("versionNumber (major.minor.patch) must be integers")
+		raise ValueError(f"{key} (major.minor.patch) must be integers")
 
 
 vars = Variables()
