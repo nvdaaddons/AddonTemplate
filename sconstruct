@@ -10,6 +10,7 @@ import os.path
 import zipfile
 import sys
 from pathlib import Path
+from collections.abc import Iterable
 
 # Add-on localization exchange facility and the template requires Python 3.10.
 # For best practice, use Python 3.11 or later to align with NVDA development.
@@ -173,8 +174,9 @@ def createAddonHelp(dir: str|Path):
 		env.Depends(addon, readmeTarget)
 
 
-def matchesNoPatterns(path: Path, patterns: list[str]) -> bool:
-	return all([not path.match(pattern) for pattern in patterns])
+def matchesNoPatterns(path: Path, patterns: Iterable[str]) -> bool:
+	"""Checks if the path, the first argument, does not match any of the patterns passed as the second argument."""
+	return not any((path.match(pattern) for pattern in patterns))
 
 
 def createAddonBundleFromPath(path: str|Path, dest: str):
