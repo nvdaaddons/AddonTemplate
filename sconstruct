@@ -25,6 +25,7 @@ import buildVars  # NOQA: E402
 
 addonDir: Final = Path("addon/")
 localeDir: Final = addonDir / "locale"
+docsDir: Final = addonDir / "doc"
 
 
 def md2html(source: str|Path, dest: str):
@@ -289,10 +290,11 @@ for file in pythonFiles:
 # Convert markdown files to html
 # We need at least doc in English and should enable the Help button for the add-on in Add-ons Manager
 createAddonHelp(addonDir)
-for mdFile in env.Glob(addonDir/"doc/*/*.md"):
+for mdPath in docsDir.glob("*/*.md"):
 	# the title of the html file is translated based on the contents of something in the moFile for a language.
 	# Thus, we find the moFile for this language and depend on it if it exists.
-	lang = Path(mdFile.get_abspath()).parent.name
+	lang = mdPath.absolute().parent.name
+	mdFile = env.File(mdPath)
 	moFile = moByLang.get(lang)
 	htmlFile = env.markdown(mdFile)
 	env.Depends(htmlFile, mdFile)
