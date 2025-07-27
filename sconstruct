@@ -161,11 +161,10 @@ env["BUILDERS"]["NVDAManifest"] = Builder(generator=manifestGenerator)
 env["BUILDERS"]["NVDATranslatedManifest"] = Builder(generator=translatedManifestGenerator)
 
 
-def createAddonHelp(dir: str|Path):
-	if isinstance(dir, str):
-		dir = Path(dir)
+def createAddonHelp(docsDir: str|Path):
+	if isinstance(docsDir, str):
+		docsDir = Path(docsDir)
 
-	docsDir = dir / "doc"
 	cssFile = Path("style.css")
 	if cssFile.is_file():
 		cssPath = docsDir / cssFile
@@ -289,7 +288,7 @@ for file in pythonFiles:
 
 # Convert markdown files to html
 # We need at least doc in English and should enable the Help button for the add-on in Add-ons Manager
-createAddonHelp(addonDir)
+createAddonHelp(docsDir)
 for mdPath in docsDir.glob("*/*.md"):
 	# the title of the html file is translated based on the contents of something in the moFile for a language.
 	# Thus, we find the moFile for this language and depend on it if it exists.
