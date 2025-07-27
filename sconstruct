@@ -13,6 +13,12 @@ from pathlib import Path
 from collections.abc import Iterable
 from typing import Final
 
+# While names imported below are available by default in every SConscript
+# Linters aren't aware about them.
+# To avoid PyRight `reportUndefinedVariable` errors about them they are imported explicitly.
+# When using other  Scons functions please add them to the line below.
+from SCons.Script import EnsurePythonVersion, Variables, BoolVariable, Environment
+
 # Add-on localization exchange facility and the template requires Python 3.10.
 # For best practice, use Python 3.11 or later to align with NVDA development.
 EnsurePythonVersion(3, 10)
