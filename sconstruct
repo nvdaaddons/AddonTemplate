@@ -273,7 +273,7 @@ for dir in langDirs:
 	moByLang[dir] = moFile
 	env.Depends(moFile, poFile)
 	translatedManifest = env.NVDATranslatedManifest(
-		dir.File("manifest.ini"), [moFile, os.path.join("manifest-translated.ini.tpl")]
+		dir.File("manifest.ini"), [moFile, "manifest-translated.ini.tpl"]
 	)
 	env.Depends(translatedManifest, ["buildVars.py"])
 	env.Depends(addon, [translatedManifest, moFile])
@@ -312,7 +312,7 @@ env.Alias("mergePot", mergePot)
 env.Depends(mergePot, i18nFiles)
 
 # Generate Manifest path
-manifest = env.NVDAManifest(os.path.join("addon", "manifest.ini"), os.path.join("manifest.ini.tpl"))
+manifest = env.NVDAManifest(os.path.join("addon", "manifest.ini"), "manifest.ini.tpl")
 # Ensure manifest is rebuilt if buildVars is updated.
 env.Depends(manifest, "buildVars.py")
 
