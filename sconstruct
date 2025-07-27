@@ -266,7 +266,7 @@ def expandGlobs(patterns: Iterable[str]) -> list:
 	return [env.File(f) for pattern in patterns for f in base.glob(pattern.lstrip('/'))]
 
 
-addon = env.NVDAAddon(addonFile, env.Dir("addon"))
+addon = env.NVDAAddon(addonFile, env.Dir(addonDir))
 
 langDirs = [f for f in env.Glob(localeDir/"*")]
 
@@ -289,7 +289,7 @@ for file in pythonFiles:
 
 # Convert markdown files to html
 # We need at least doc in English and should enable the Help button for the add-on in Add-ons Manager
-createAddonHelp("addon")
+createAddonHelp(addonDir)
 for mdFile in env.Glob(addonDir/"doc/*/*.md"):
 	# the title of the html file is translated based on the contents of something in the moFile for a language.
 	# Thus, we find the moFile for this language and depend on it if it exists.
