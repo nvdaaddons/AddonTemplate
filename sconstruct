@@ -18,6 +18,7 @@ from typing import Final
 # To avoid PyRight `reportUndefinedVariable` errors about them they are imported explicitly.
 # When using other  Scons functions please add them to the line below.
 from SCons.Script import EnsurePythonVersion, Variables, BoolVariable, Environment
+from SCons.Node import FS
 
 # Add-on localization exchange facility and the template requires Python 3.10.
 # For best practice, use Python 3.11 or later to align with NVDA development.
@@ -265,7 +266,7 @@ def generateTranslatedManifest(source, language, out):
 		f.write(result)
 
 
-def expandGlobs(patterns: Iterable[str]) -> list:
+def expandGlobs(patterns: Iterable[str]) -> list[FS.File]:
 	base = Path(".")
 	return [env.File(f) for pattern in patterns for f in base.glob(pattern.lstrip('/'))]
 
@@ -273,10 +274,10 @@ def expandGlobs(patterns: Iterable[str]) -> list:
 addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
 addon = env.NVDAAddon(addonFile, env.Dir(addonDir))
 
-langDirs = [env.Dir(d) for d in localeDir.glob("*/")]
+langDirs: list[FS.Dir] = [env.Dir(d) for d in localeDir.glob("*/")]
 
 # Allow all NVDA's gettext po files to be compiled in source/locale, and manifest files to be generated
-moByLang = {}
+moByLang: dict[FS.Dir, FS.File] = {}
 for dir in langDirs:
 	poFile = dir.File(os.path.join("LC_MESSAGES", "nvda.po"))
 	moFile = env.gettextMoFile(poFile)
