@@ -127,8 +127,6 @@ if "channel" in env and env["channel"] is not None:
 buildVars.addon_info["addon_version"] = env["addon_version"]
 buildVars.addon_info["addon_updateChannel"] = env["addon_updateChannel"]
 
-addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
-
 
 def addonGenerator(target, source, env, for_signature):
 	action = env.Action(
@@ -266,6 +264,7 @@ def expandGlobs(patterns: Iterable[str]) -> list:
 	return [env.File(f) for pattern in patterns for f in base.glob(pattern.lstrip('/'))]
 
 
+addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
 addon = env.NVDAAddon(addonFile, env.Dir(addonDir))
 
 langDirs = [f for f in env.Glob(localeDir/"*")]
