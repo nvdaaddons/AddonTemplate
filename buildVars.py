@@ -1,6 +1,7 @@
 # Build customizations
 # Change this file instead of sconstruct or manifest files, whenever possible.
 
+from typing import TypedDict
 
 # Since some strings in `addon_info` are translatable,
 # we need to include them in the .po files.
@@ -11,8 +12,24 @@ def _(arg: str) -> str:
 	return arg
 
 
+# A typed dictionary for storing meta information about add-on.
+class AddonInfo(TypedDict):
+	addon_name: str
+	addon_summary: str
+	addon_description: str
+	addon_version: str
+	addon_author: str
+	addon_url: str|None
+	addon_sourceURL: str|None
+	addon_docFileName: str
+	addon_minimumNVDAVersion: str|None
+	addon_lastTestedNVDAVersion: str|None
+	addon_updateChannel: str|None
+	addon_license: str|None
+	addon_licenseURL: str|None
+
 # Add-on information variables
-addon_info = {
+addon_info: AddonInfo = {
 	# add-on Name/identifier, internal for NVDA
 	"addon_name": "addonTemplate",
 	# Add-on summary/title, usually the user visible name of the add-on
