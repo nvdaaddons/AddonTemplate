@@ -11,6 +11,7 @@ import zipfile
 import sys
 from pathlib import Path
 from collections.abc import Iterable
+from typing import Final
 
 # Add-on localization exchange facility and the template requires Python 3.10.
 # For best practice, use Python 3.11 or later to align with NVDA development.
@@ -20,6 +21,10 @@ EnsurePythonVersion(3, 10)
 sys.dont_write_bytecode = True
 
 import buildVars  # NOQA: E402
+
+
+addonDir: Final = Path("addon/")
+localeDir: Final = addonDir / "locale"
 
 
 def md2html(source: str|Path, dest: str):
@@ -35,7 +40,7 @@ def md2html(source: str|Path, dest: str):
 	try:
 		_ = gettext.translation(
 			"nvda",
-			localedir=os.path.join("addon", "locale"),
+			localedir=localeDir,
 			languages=[localeLang]
 		).gettext
 		summary = _(buildVars.addon_info["addon_summary"])
@@ -142,8 +147,8 @@ def manifestGenerator(target, source, env, for_signature):
 
 
 def translatedManifestGenerator(target, source, env, for_signature):
-	dir = os.path.abspath(os.path.join(os.path.dirname(str(source[0])), ".."))
-	lang = os.path.basename(dir)
+	dir = Path(str(source[0])).absolute().parents[1]
+	lang = dir.name
 	action = env.Action(
 		lambda target, source, env: generateTranslatedManifest(source[1].abspath, lang, target[0].abspath)
 		and None,
@@ -224,7 +229,7 @@ def generateManifest(source, dest):
 
 
 def generateTranslatedManifest(source, language, out):
-	_ = gettext.translation("nvda", localedir=os.path.join("addon", "locale"), languages=[language]).gettext
+	_ = gettext.translation("nvda", localedir=localeDir, languages=[language]).gettext
 	vars = {}
 	for var in ("addon_summary", "addon_description"):
 		vars[var] = _(buildVars.addon_info[var])
@@ -263,7 +268,7 @@ def expandGlobs(patterns: Iterable[str]) -> list:
 
 addon = env.NVDAAddon(addonFile, env.Dir("addon"))
 
-langDirs = [f for f in env.Glob(os.path.join("addon", "locale", "*"))]
+langDirs = [f for f in env.Glob(localeDir/"*")]
 
 # Allow all NVDA's gettext po files to be compiled in source/locale, and manifest files to be generated
 moByLang = {}
@@ -285,10 +290,10 @@ for file in pythonFiles:
 # Convert markdown files to html
 # We need at least doc in English and should enable the Help button for the add-on in Add-ons Manager
 createAddonHelp("addon")
-for mdFile in env.Glob(os.path.join("addon", "doc", "*", "*.md")):
+for mdFile in env.Glob(addonDir/"doc/*/*.md"):
 	# the title of the html file is translated based on the contents of something in the moFile for a language.
 	# Thus, we find the moFile for this language and depend on it if it exists.
-	lang = os.path.basename(os.path.dirname(mdFile.get_abspath()))
+	lang = Path(mdFile.get_abspath()).parent.name
 	moFile = moByLang.get(lang)
 	htmlFile = env.markdown(mdFile)
 	env.Depends(htmlFile, mdFile)
@@ -312,7 +317,7 @@ env.Alias("mergePot", mergePot)
 env.Depends(mergePot, i18nFiles)
 
 # Generate Manifest path
-manifest = env.NVDAManifest(os.path.join("addon", "manifest.ini"), "manifest.ini.tpl")
+manifest = env.NVDAManifest(addonDir/"manifest.ini", "manifest.ini.tpl")
 # Ensure manifest is rebuilt if buildVars is updated.
 env.Depends(manifest, "buildVars.py")
 
