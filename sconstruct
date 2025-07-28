@@ -38,87 +38,6 @@ localeDir: Final = addonDir / "locale"
 docsDir: Final = addonDir / "doc"
 
 
-def md2html(
-		source: str|Path,
-		dest: str,
-		*,
-		localeDir: Path,
-		loacleFileName: str,
-		mdExtensions: list[str],
-		addonSummary: str,
-		addonVersion: str
-	):
-	if isinstance(source, str):
-		source = Path(source)
-
-	import markdown
-
-	# Use extensions if defined.
-	localeLang = source.parent.name
-	lang = localeLang.replace("_", "-")
-	try:
-		_ = gettext.translation(
-			loacleFileName,
-			localedir=localeDir,
-			languages=[localeLang]
-		).gettext
-		summary = _(addonSummary)
-	except Exception:
-		summary = addonSummary
-	title = f"{summary} {addonVersion}"
-	headerDic = {
-		'[[!meta title="': "# ",
-		'"]]': " #",
-	}
-	with codecs.open(str(source), "r", "utf-8") as f:
-		mdText = f.read()
-	for k, v in headerDic.items():
-		mdText = mdText.replace(k, v, 1)
-	htmlText = markdown.markdown(mdText, extensions=mdExtensions)
-	# Optimization: build resulting HTML text in one go instead of writing parts separately.
-	docText = "\n".join(
-		(
-			"<!DOCTYPE html>",
-			f'<html lang="{lang}">',
-			"<head>",
-			'<meta charset="UTF-8">',
-			'<meta name="viewport" content="width=device-width, initial-scale=1.0">',
-			'<link rel="stylesheet" type="text/css" href="../style.css" media="screen">',
-			f"<title>{title}</title>",
-			"</head>\n<body>",
-			htmlText,
-			"</body>\n</html>",
-		)
-	)
-	with codecs.open(dest, "w", "utf-8") as f:
-		f.write(docText)
-
-
-def mdTool(env: Environment):
-	env.SetDefault(localeDir = Path("locale/"))
-	env.SetDefault(localeFileName = "messages")
-	env.SetDefault(mdExtensions = {})
-
-	mdAction = env.Action(
-		lambda target, source, env: md2html(
-			source[0].path,
-			target[0].path,
-			localeDir=env["localeDir"],
-			loacleFileName=env["localeFileName"],
-			mdExtensions=env["mdExtensions"],
-			addonSummary=env["addon_summary"],
-			addonVersion=env["addon_version"]
-		),
-		lambda target, source, env: f"Generating {target[0]}",
-	)
-	mdBuilder = env.Builder(
-		action=mdAction,
-		suffix=".html",
-		src_suffix=".md",
-	)
-	env["BUILDERS"]["markdown"] = mdBuilder
-
-
 def validateVersionNumber(key: str, val: str, _):
 	# Used to make sure version major.minor.patch are integers to comply with NV Access add-on store.
 	# Ignore all this if version number is not specified.
@@ -137,7 +56,7 @@ vars.Add("versionNumber", "Version number of the form major.minor.patch", "0.0.0
 vars.Add(BoolVariable("dev", "Whether this is a daily development version", False))
 vars.Add("channel", "Update channel for this build", buildVars.addon_info["addon_updateChannel"])
 
-env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", mdTool])
+env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", "mdTool"])
 env.Append(**buildVars.addon_info)
 
 if env["dev"]:
