@@ -93,7 +93,7 @@ def generate(env: Environment):
 			mdExtensions=env["mdExtensions"],
 			addonSummary=env["addon_summary"],
 			addonVersion=env["addon_version"]
-		),
+		) and None,
 		lambda target, source, env: f"Generating {target[0]}",
 	)
 	mdBuilder = env.Builder(
