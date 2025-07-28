@@ -18,7 +18,10 @@ from typing import Final
 # To avoid PyRight `reportUndefinedVariable` errors about them they are imported explicitly.
 # When using other  Scons functions please add them to the line below.
 from SCons.Script import EnsurePythonVersion, Variables, BoolVariable, Environment, Builder, Copy
+
+# Imports for type hints
 from SCons.Node import FS
+from SCons.Action import CommandAction
 
 # Add-on localization exchange facility and the template requires Python 3.10.
 # For best practice, use Python 3.11 or later to align with NVDA development.
@@ -85,7 +88,7 @@ def md2html(source: str|Path, dest: str):
 		f.write(docText)
 
 
-def mdTool(env):
+def mdTool(env: Environment):
 	mdAction = env.Action(
 		lambda target, source, env: md2html(source[0].path, target[0].path),
 		lambda target, source, env: f"Generating {target[0]}",
@@ -136,7 +139,7 @@ buildVars.addon_info["addon_version"] = env["addon_version"]
 buildVars.addon_info["addon_updateChannel"] = env["addon_updateChannel"]
 
 
-def addonGenerator(target, source, env, for_signature):
+def addonGenerator(target: list[FS.Entry], source: list[FS.Entry], env: Environment, for_signature: bool) -> CommandAction:
 	action = env.Action(
 		lambda target, source, env: createAddonBundleFromPath(source[0].abspath, target[0].abspath) and None,
 		lambda target, source, env: f"Generating Addon {target[0]}",
@@ -144,7 +147,7 @@ def addonGenerator(target, source, env, for_signature):
 	return action
 
 
-def manifestGenerator(target, source, env, for_signature):
+def manifestGenerator(target: list[FS.Entry], source: list[FS.Entry], env: Environment, for_signature: bool) -> CommandAction:
 	action = env.Action(
 		lambda target, source, env: generateManifest(source[0].abspath, target[0].abspath) and None,
 		lambda target, source, env: f"Generating manifest {target[0]}",
@@ -152,7 +155,7 @@ def manifestGenerator(target, source, env, for_signature):
 	return action
 
 
-def translatedManifestGenerator(target, source, env, for_signature):
+def translatedManifestGenerator(target: list[FS.Entry], source: list[FS.Entry], env: Environment, for_signature: bool) -> CommandAction:
 	dir = Path(str(source[0])).absolute().parents[1]
 	lang = dir.name
 	action = env.Action(
@@ -204,7 +207,7 @@ def createAddonBundleFromPath(path: str|Path, dest: str):
 	return dest
 
 
-def generateManifest(source, dest):
+def generateManifest(source: str, dest: str):
 	# Prepare the root manifest section
 	addon_info = buildVars.addon_info
 	with codecs.open(source, "r", "utf-8") as f:
@@ -233,7 +236,7 @@ def generateManifest(source, dest):
 		f.write(manifest)
 
 
-def generateTranslatedManifest(source, language, out):
+def generateTranslatedManifest(source: str, language: str, out: str):
 	_ = gettext.translation("nvda", localedir=localeDir, languages=[language]).gettext
 	vars = {}
 	for var in ("addon_summary", "addon_description"):
