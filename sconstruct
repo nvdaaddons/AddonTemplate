@@ -17,7 +17,7 @@ from typing import Final
 # Linters aren't aware about them.
 # To avoid PyRight `reportUndefinedVariable` errors about them they are imported explicitly.
 # When using other  Scons functions please add them to the line below.
-from SCons.Script import EnsurePythonVersion, Variables, BoolVariable, Environment
+from SCons.Script import EnsurePythonVersion, Variables, BoolVariable, Environment, Builder, Copy
 from SCons.Node import FS
 
 # Add-on localization exchange facility and the template requires Python 3.10.
