@@ -38,28 +38,34 @@ localeDir: Final = addonDir / "locale"
 docsDir: Final = addonDir / "doc"
 
 
-def md2html(source: str|Path, dest: str):
+def md2html(
+		source: str|Path,
+		dest: str,
+		*,
+		localeDir: Path,
+		loacleFileName: str,
+		mdExtensions: list[str],
+		addonSummary: str,
+		addonVersion: str
+	):
 	if isinstance(source, str):
 		source = Path(source)
 
 	import markdown
 
 	# Use extensions if defined.
-	mdExtensions = buildVars.markdownExtensions
 	localeLang = source.parent.name
 	lang = localeLang.replace("_", "-")
 	try:
 		_ = gettext.translation(
-			"nvda",
+			loacleFileName,
 			localedir=localeDir,
 			languages=[localeLang]
 		).gettext
-		summary = _(buildVars.addon_info["addon_summary"])
+		summary = _(addonSummary)
 	except Exception:
-		summary = buildVars.addon_info["addon_summary"]
-	title = "{addonSummary} {addonVersion}".format(
-		addonSummary=summary, addonVersion=buildVars.addon_info["addon_version"]
-	)
+		summary = addonSummary
+	title = f"{summary} {addonVersion}"
 	headerDic = {
 		'[[!meta title="': "# ",
 		'"]]': " #",
@@ -89,8 +95,20 @@ def md2html(source: str|Path, dest: str):
 
 
 def mdTool(env: Environment):
+	env.SetDefault(localeDir = Path("locale/"))
+	env.SetDefault(localeFileName = "messages")
+	env.SetDefault(mdExtensions = {})
+
 	mdAction = env.Action(
-		lambda target, source, env: md2html(source[0].path, target[0].path),
+		lambda target, source, env: md2html(
+			source[0].path,
+			target[0].path,
+			localeDir=env["localeDir"],
+			loacleFileName=env["localeFileName"],
+			mdExtensions=env["mdExtensions"],
+			addonSummary=env["addon_summary"],
+			addonVersion=env["addon_version"]
+		),
 		lambda target, source, env: f"Generating {target[0]}",
 	)
 	mdBuilder = env.Builder(
@@ -304,7 +322,7 @@ for mdPath in docsDir.glob("*/*.md"):
 	lang = mdPath.absolute().parent.name
 	mdFile = env.File(mdPath)
 	moFile = moByLang.get(lang)
-	htmlFile = env.markdown(mdFile)
+	htmlFile = env.markdown(mdFile, localeDir=localeDir, localeFileName="nvda", mdExtensions=buildVars.markdownExtensions)
 	env.Depends(htmlFile, mdFile)
 	if moFile:
 		env.Depends(htmlFile, moFile)
