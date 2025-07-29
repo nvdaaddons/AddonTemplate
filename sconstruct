@@ -165,21 +165,11 @@ def generateManifest(source: str, dest: str):
 	# Add additional manifest sections such as custom braile tables
 	# Custom braille translation tables
 	if hasattr(buildVars, "brailleTables"):
-		manifest_brailleTables = ["\n[brailleTables]"]
-		for table in buildVars.brailleTables.keys():
-			manifest_brailleTables.append(f"[[{table}]]")
-			for key, val in buildVars.brailleTables[table].items():
-				manifest_brailleTables.append(f"{key} = {val}")
-		manifest += "\n".join(manifest_brailleTables) + "\n"
+		manifest += format_nested_section("brailleTables", buildVars.brailleTables)
 
 	# Custom speech symbol dictionaries
 	if hasattr(buildVars, "symbolDictionaries"):
-		manifest_symbolDictionaries = ["\n[symbolDictionaries]"]
-		for dictionary in buildVars.symbolDictionaries.keys():
-			manifest_symbolDictionaries.append(f"[[{dictionary}]]")
-			for key, val in buildVars.symbolDictionaries[dictionary].items():
-				manifest_symbolDictionaries.append(f"{key} = {val}")
-		manifest += "\n".join(manifest_symbolDictionaries) + "\n"
+		manifest += format_nested_section("symbolDictionaries", buildVars.symbolDictionaries)
 
 	with codecs.open(dest, "w", "utf-8") as f:
 		f.write(manifest)
