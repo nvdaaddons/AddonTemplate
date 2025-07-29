@@ -175,37 +175,34 @@ def generateManifest(source: str, dest: str):
 		f.write(manifest)
 
 
-def generateTranslatedManifest(source: str, language: str, out: str):
+def generateTranslatedManifest(source: str, language: str, dest: str):
 	_ = gettext.translation("nvda", localedir=localeDir, languages=[language]).gettext
 	vars: dict[str, str] = {}
 	for var in ("addon_summary", "addon_description"):
 		vars[var] = _(buildVars.addon_info[var])
 	with codecs.open(source, "r", "utf-8") as f:
 		manifest_template = f.read()
-	result = manifest_template.format(**vars)
+	manifest = manifest_template.format(**vars)
+
+	def _format_section_only_with_displayName(section_name: str, data: Mapping[str, Mapping[str, str]]) -> str:
+		lines = [f"\n[{section_name}]"]
+		for item, inner_dict in data.items():
+			lines.append(f"[[{item}]]")
+			# Fetch display name only.
+			lines.append(f"displayName = {_(inner_dict['displayName'])}")
+		return "\n".join(lines) + "\n"
+
 	# Add additional manifest sections such as custom braile tables
 	# Custom braille translation tables
-	if hasattr(buildVars, "brailleTables"):
-		result_brailleTables = ["\n[brailleTables]"]
-		for table in buildVars.brailleTables.keys():
-			result_brailleTables.append(f"[[{table}]]")
-			# Fetch display name only.
-			result_brailleTables.append(f"displayName = {_(buildVars.brailleTables[table]['displayName'])}")
-		result += "\n".join(result_brailleTables) + "\n"
+	if tables := getattr(buildVars, "brailleTables", None):
+		manifest += _format_section_only_with_displayName("brailleTables", tables)
 
 	# Custom speech symbol dictionaries
-	if hasattr(buildVars, "symbolDictionaries"):
-		result_symbolDictionaries = ["\n[symbolDictionaries]"]
-		for dictionary in buildVars.symbolDictionaries.keys():
-			result_symbolDictionaries.append(f"[[{dictionary}]]")
-			# Fetch display name only.
-			result_symbolDictionaries.append(
-				f"displayName = {_(buildVars.symbolDictionaries[dictionary]['displayName'])}"
-			)
-		result += "\n".join(result_symbolDictionaries) + "\n"
+	if dicts := getattr(buildVars, "symbolDictionaries", None):
+		manifest += _format_section_only_with_displayName("symbolDictionaries", dicts)
 
-	with codecs.open(out, "w", "utf-8") as f:
-		f.write(result)
+	with codecs.open(dest, "w", "utf-8") as f:
+		f.write(manifest)
 
 
 def expandGlobs(patterns: Iterable[str], rootdir: Path = Path(".")) -> list[FS.Entry]:
