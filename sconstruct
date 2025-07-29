@@ -175,7 +175,7 @@ def generateManifest(source: str, dest: str):
 
 def generateTranslatedManifest(source: str, language: str, out: str):
 	_ = gettext.translation("nvda", localedir=localeDir, languages=[language]).gettext
-	vars = {}
+	vars: dict[str, str] = {}
 	for var in ("addon_summary", "addon_description"):
 		vars[var] = _(buildVars.addon_info[var])
 	with codecs.open(source, "r", "utf-8") as f:
@@ -248,7 +248,7 @@ for mdFile in env.Glob(docsDir/"*/*.md"):
 
 # Pot target
 i18nFiles = expandGlobs(buildVars.i18nSources)
-gettextvars = {
+gettextvars: dict[str, str] = {
 	"gettext_package_bugs_address": "nvda-translations@groups.io",
 	"gettext_package_name": buildVars.addon_info["addon_name"],
 	"gettext_package_version": buildVars.addon_info["addon_version"],

@@ -104,7 +104,7 @@ markdownExtensions: list[str] = []
 # contracted (contracted (True) or uncontracted (False) braille code),
 # output (shown in output table list),
 # input (shown in input table list).
-brailleTables = {}
+brailleTables: dict[str, dict[str, str]] = {}
 
 # Custom speech symbol dictionaries
 # Symbol dictionary files reside in the locale folder, e.g. `locale\en`, and are named `symbols-<name>.dic`.
@@ -113,4 +113,4 @@ brailleTables = {}
 # with keys inside recording the following attributes:
 # displayName (name of the speech dictionary shown to users and translatable),
 # mandatory (True when always enabled, False when not.
-symbolDictionaries = {}
+symbolDictionaries: dict[str, dict[str, str]] = {}
