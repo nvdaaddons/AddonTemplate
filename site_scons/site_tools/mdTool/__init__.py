@@ -3,7 +3,7 @@ This tool allows you to generate HTML files from Markdown.
 
 Adds the following Builder to the constructed environment:
 
-- markdown: Build HTML from Markdown
+- md2html: Build HTML from Markdown
 
 The following variables are required in the environment:
 
@@ -101,7 +101,7 @@ def generate(env: Environment):
 		suffix=".html",
 		src_suffix=".md",
 	)
-	env["BUILDERS"]["markdown"] = mdBuilder
+	env["BUILDERS"]["md2html"] = mdBuilder
 
 
 def exists():

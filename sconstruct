@@ -239,7 +239,7 @@ for mdFile in env.Glob(docsDir/"*/*.md"):
 	# Thus, we find the moFile for this language and depend on it if it exists.
 	lang = Path(str(mdFile)).absolute().parent.name
 	moFile = moByLang.get(lang)
-	htmlFile = env.markdown(mdFile, localeDir=localeDir, localeFileName="nvda", mdExtensions=buildVars.markdownExtensions)
+	htmlFile = env.md2html(mdFile, localeDir=localeDir, localeFileName="nvda", mdExtensions=buildVars.markdownExtensions)
 	env.Depends(htmlFile, mdFile)
 	if moFile:
 		env.Depends(htmlFile, moFile)
