@@ -152,7 +152,7 @@ def generateManifest(source: str, dest: str):
 	manifest = manifest_template.format(**addon_info)
 	# Add additional manifest sections such as custom braile tables
 	# Custom braille translation tables
-	if getattr(buildVars, "brailleTables", {}):
+	if hasattr(buildVars, "brailleTables"):
 		manifest_brailleTables = ["\n[brailleTables]"]
 		for table in buildVars.brailleTables.keys():
 			manifest_brailleTables.append(f"[[{table}]]")
@@ -161,7 +161,7 @@ def generateManifest(source: str, dest: str):
 		manifest += "\n".join(manifest_brailleTables) + "\n"
 
 	# Custom speech symbol dictionaries
-	if getattr(buildVars, "symbolDictionaries", {}):
+	if hasattr(buildVars, "symbolDictionaries"):
 		manifest_symbolDictionaries = ["\n[symbolDictionaries]"]
 		for dictionary in buildVars.symbolDictionaries.keys():
 			manifest_symbolDictionaries.append(f"[[{dictionary}]]")
@@ -183,7 +183,7 @@ def generateTranslatedManifest(source: str, language: str, out: str):
 	result = manifest_template.format(**vars)
 	# Add additional manifest sections such as custom braile tables
 	# Custom braille translation tables
-	if getattr(buildVars, "brailleTables", {}):
+	if hasattr(buildVars, "brailleTables"):
 		result_brailleTables = ["\n[brailleTables]"]
 		for table in buildVars.brailleTables.keys():
 			result_brailleTables.append(f"[[{table}]]")
@@ -192,7 +192,7 @@ def generateTranslatedManifest(source: str, language: str, out: str):
 		result += "\n".join(result_brailleTables) + "\n"
 
 	# Custom speech symbol dictionaries
-	if getattr(buildVars, "symbolDictionaries", {}):
+	if hasattr(buildVars, "symbolDictionaries"):
 		result_symbolDictionaries = ["\n[symbolDictionaries]"]
 		for dictionary in buildVars.symbolDictionaries.keys():
 			result_symbolDictionaries.append(f"[[{dictionary}]]")
