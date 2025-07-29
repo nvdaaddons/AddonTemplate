@@ -108,22 +108,6 @@ env["BUILDERS"]["NVDAManifest"] = Builder(generator=manifestGenerator)
 env["BUILDERS"]["NVDATranslatedManifest"] = Builder(generator=translatedManifestGenerator)
 
 
-def createAddonHelp(docsDir: str|Path):
-	if isinstance(docsDir, str):
-		docsDir = Path(docsDir)
-
-	cssFile = Path("style.css")
-	if cssFile.is_file():
-		cssPath = docsDir / cssFile
-		cssTarget = env.Command(str(cssPath), str(cssFile), Copy("$TARGET", "$SOURCE"))
-		env.Depends(addon, cssTarget)
-	readmeFile = Path("readme.md")
-	if readmeFile.is_file():
-		readmePath = docsDir / buildVars.baseLanguage / readmeFile
-		readmeTarget = env.Command(str(readmePath), str(readmeFile), Copy("$TARGET", "$SOURCE"))
-		env.Depends(addon, readmeTarget)
-
-
 def matchesNoPatterns(path: Path, patterns: Iterable[str]) -> bool:
 	"""Checks if the path, the first argument, does not match any of the patterns passed as the second argument."""
 	return not any((path.match(pattern) for pattern in patterns))
@@ -233,7 +217,16 @@ for file in pythonFiles:
 
 # Convert markdown files to html
 # We need at least doc in English and should enable the Help button for the add-on in Add-ons Manager
-createAddonHelp(docsDir)
+if (cssFile := Path("style.css")).is_file():
+	cssPath = docsDir / cssFile
+	cssTarget = env.Command(str(cssPath), str(cssFile), Copy("$TARGET", "$SOURCE"))
+	env.Depends(addon, cssTarget)
+
+if (readmeFile := Path("readme.md")).is_file():
+	readmePath = docsDir / buildVars.baseLanguage / readmeFile
+	readmeTarget = env.Command(str(readmePath), str(readmeFile), Copy("$TARGET", "$SOURCE"))
+	env.Depends(addon, readmeTarget)
+
 for mdFile in env.Glob(docsDir/"*/*.md"):
 	# the title of the html file is translated based on the contents of something in the moFile for a language.
 	# Thus, we find the moFile for this language and depend on it if it exists.
