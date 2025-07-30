@@ -33,11 +33,6 @@ sys.dont_write_bytecode = True
 import buildVars  # NOQA: E402
 
 
-addonDir: Final = Path("addon/")
-localeDir: Final = addonDir / "locale"
-docsDir: Final = addonDir / "doc"
-
-
 def validateVersionNumber(key: str, val: str, _):
 	# Used to make sure version major.minor.patch are integers to comply with NV Access add-on store.
 	# Ignore all this if version number is not specified.
@@ -48,32 +43,6 @@ def validateVersionNumber(key: str, val: str, _):
 		raise ValueError(f"{key} must have three parts (major.minor.patch)")
 	if not all([part.isnumeric() for part in versionNumber]):
 		raise ValueError(f"{key} (major.minor.patch) must be integers")
-
-
-vars = Variables()
-vars.Add("version", "The version of this build", buildVars.addon_info["addon_version"])
-vars.Add("versionNumber", "Version number of the form major.minor.patch", "0.0.0", validateVersionNumber)
-vars.Add(BoolVariable("dev", "Whether this is a daily development version", False))
-vars.Add("channel", "Update channel for this build", buildVars.addon_info["addon_updateChannel"])
-
-env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", "mdTool"])
-env.Append(**buildVars.addon_info)
-
-if env["dev"]:
-	from datetime import date
-
-	versionTimestamp = date.today().strftime('%Y%m%d')
-	version = f"{versionTimestamp}.0.0"
-	env["addon_version"] = version
-	env["versionNumber"] = version
-	env["channel"] = "dev"
-elif env["version"] is not None:
-	env["addon_version"] = env["version"]
-if "channel" in env and env["channel"] is not None:
-	env["addon_updateChannel"] = env["channel"]
-
-buildVars.addon_info["addon_version"] = env["addon_version"]
-buildVars.addon_info["addon_updateChannel"] = env["addon_updateChannel"]
 
 
 def addonGenerator(target: list[FS.Entry], source: list[FS.Entry], env: Environment, for_signature: bool) -> CommandAction:
@@ -101,11 +70,6 @@ def translatedManifestGenerator(target: list[FS.Entry], source: list[FS.Entry], 
 		lambda target, source, env: f"Generating translated manifest {target[0]}",
 	)
 	return action
-
-
-env["BUILDERS"]["NVDAAddon"] = Builder(generator=addonGenerator)
-env["BUILDERS"]["NVDAManifest"] = Builder(generator=manifestGenerator)
-env["BUILDERS"]["NVDATranslatedManifest"] = Builder(generator=translatedManifestGenerator)
 
 
 def matchesNoPatterns(path: Path, patterns: Iterable[str]) -> bool:
@@ -191,6 +155,42 @@ def generateTranslatedManifest(source: str, language: str, dest: str):
 
 def expandGlobs(patterns: Iterable[str], rootdir: Path = Path(".")) -> list[FS.Entry]:
 	return [env.Entry(e) for pattern in patterns for e in rootdir.glob(pattern.lstrip('/'))]
+
+
+addonDir: Final = Path("addon/")
+localeDir: Final = addonDir / "locale"
+docsDir: Final = addonDir / "doc"
+
+
+vars = Variables()
+vars.Add("version", "The version of this build", buildVars.addon_info["addon_version"])
+vars.Add("versionNumber", "Version number of the form major.minor.patch", "0.0.0", validateVersionNumber)
+vars.Add(BoolVariable("dev", "Whether this is a daily development version", False))
+vars.Add("channel", "Update channel for this build", buildVars.addon_info["addon_updateChannel"])
+
+env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", "mdTool"])
+env.Append(**buildVars.addon_info)
+
+if env["dev"]:
+	from datetime import date
+
+	versionTimestamp = date.today().strftime('%Y%m%d')
+	version = f"{versionTimestamp}.0.0"
+	env["addon_version"] = version
+	env["versionNumber"] = version
+	env["channel"] = "dev"
+elif env["version"] is not None:
+	env["addon_version"] = env["version"]
+if "channel" in env and env["channel"] is not None:
+	env["addon_updateChannel"] = env["channel"]
+
+buildVars.addon_info["addon_version"] = env["addon_version"]
+buildVars.addon_info["addon_updateChannel"] = env["addon_updateChannel"]
+
+
+env["BUILDERS"]["NVDAAddon"] = Builder(generator=addonGenerator)
+env["BUILDERS"]["NVDAManifest"] = Builder(generator=manifestGenerator)
+env["BUILDERS"]["NVDATranslatedManifest"] = Builder(generator=translatedManifestGenerator)
 
 
 addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
