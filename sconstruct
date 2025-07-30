@@ -45,12 +45,16 @@ def validateVersionNumber(key: str, val: str, _):
 		raise ValueError(f"{key} (major.minor.patch) must be integers")
 
 
-def addonGenerator(target: list[FS.Entry], source: list[FS.Entry], env: Environment, for_signature: bool) -> CommandAction:
+def addonTool(env: Environment):
 	action = env.Action(
 		lambda target, source, env: createAddonBundleFromPath(source[0].abspath, target[0].abspath) and None,
 		lambda target, source, env: f"Generating Addon {target[0]}",
 	)
-	return action
+	env["BUILDERS"]["NVDAAddon"] = Builder(
+		action=action,
+		suffix=".nvda-addon",
+		src_suffix="/"
+	)
 
 
 def manifestGenerator(target: list[FS.Entry], source: list[FS.Entry], env: Environment, for_signature: bool) -> CommandAction:
@@ -168,7 +172,7 @@ vars.Add("versionNumber", "Version number of the form major.minor.patch", "0.0.0
 vars.Add(BoolVariable("dev", "Whether this is a daily development version", False))
 vars.Add("channel", "Update channel for this build", buildVars.addon_info["addon_updateChannel"])
 
-env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", "mdTool"])
+env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", "mdTool", addonTool])
 env.Append(**buildVars.addon_info)
 
 if env["dev"]:
@@ -188,7 +192,6 @@ buildVars.addon_info["addon_version"] = env["addon_version"]
 buildVars.addon_info["addon_updateChannel"] = env["addon_updateChannel"]
 
 
-env["BUILDERS"]["NVDAAddon"] = Builder(generator=addonGenerator)
 env["BUILDERS"]["NVDAManifest"] = Builder(generator=manifestGenerator)
 env["BUILDERS"]["NVDATranslatedManifest"] = Builder(generator=translatedManifestGenerator)
 
