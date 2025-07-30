@@ -9,8 +9,8 @@ import os
 import os.path
 import sys
 from pathlib import Path
-from collections.abc import Iterable
-from typing import Final, Mapping
+from collections.abc import Iterable, Mapping
+from typing import Final
 
 # While names imported below are available by default in every SConscript
 # Linters aren't aware about them.
