@@ -70,8 +70,14 @@ def translatedManifestGenerator(target: list[FS.Entry], source: list[FS.Entry], 
 	dir = Path(str(source[0])).absolute().parents[1]
 	lang = dir.name
 	action = env.Action(
-		lambda target, source, env: generateTranslatedManifest(source[1].abspath, lang, target[0].abspath)
-		and None,
+		lambda target, source, env: generateTranslatedManifest(
+			source[1].abspath,
+			target[0].abspath,
+			lang, env["localedir"],
+			addon_info=env["addon_info"],
+			brailleTables=env["brailleTables"],
+			symbolDictionaries=env["symbolDictionaries"],
+		) and None,
 		lambda target, source, env: f"Generating translated manifest {target[0]}",
 	)
 	return action
@@ -113,11 +119,19 @@ def generateManifest(
 		f.write(manifest)
 
 
-def generateTranslatedManifest(source: str, language: str, dest: str):
+def generateTranslatedManifest(
+		source: str,
+		dest: str,
+		language: str,
+		localeDir: str,
+		addon_info: AddonInfo,
+		brailleTables: BrailleTables,
+		symbolDictionaries: SymbolDictionaries,
+	):
 	_ = gettext.translation("nvda", localedir=localeDir, languages=[language]).gettext
 	vars: dict[str, str] = {}
 	for var in ("addon_summary", "addon_description"):
-		vars[var] = _(buildVars.addon_info[var])
+		vars[var] = _(addon_info[var])
 	with codecs.open(source, "r", "utf-8") as f:
 		manifest_template = f.read()
 	manifest = manifest_template.format(**vars)
@@ -132,12 +146,12 @@ def generateTranslatedManifest(source: str, language: str, dest: str):
 
 	# Add additional manifest sections such as custom braile tables
 	# Custom braille translation tables
-	if tables := getattr(buildVars, "brailleTables", None):
-		manifest += _format_section_only_with_displayName("brailleTables", tables)
+	if brailleTables:
+		manifest += _format_section_only_with_displayName("brailleTables", brailleTables)
 
 	# Custom speech symbol dictionaries
-	if dicts := getattr(buildVars, "symbolDictionaries", None):
-		manifest += _format_section_only_with_displayName("symbolDictionaries", dicts)
+	if symbolDictionaries:
+		manifest += _format_section_only_with_displayName("symbolDictionaries", symbolDictionaries)
 
 	with codecs.open(dest, "w", "utf-8") as f:
 		f.write(manifest)
@@ -159,7 +173,13 @@ vars.Add(BoolVariable("dev", "Whether this is a daily development version", Fals
 vars.Add("channel", "Update channel for this build", buildVars.addon_info["addon_updateChannel"])
 
 env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", "mdTool", "NVDATool", manifestTool])
-env.Append(**buildVars.addon_info)
+env.Append(
+	addon_info=buildVars.addon_info,
+	localedir=localeDir,
+	brailleTables=buildVars.brailleTables,
+	symbolDictionaries=buildVars.symbolDictionaries,
+	**buildVars.addon_info
+)
 
 if env["dev"]:
 	from datetime import date
@@ -242,10 +262,7 @@ env.Alias("mergePot", mergePot)
 env.Depends(mergePot, i18nFiles)
 
 # Generate Manifest path
-manifest = env.NVDAManifest(env.File(addonDir/"manifest.ini"), "manifest.ini.tpl",
-							addon_info=buildVars.addon_info,
-							brailleTables=buildVars.brailleTables,
-							symbolDictionaries=buildVars.symbolDictionaries)
+manifest = env.NVDAManifest(env.File(addonDir/"manifest.ini"), "manifest.ini.tpl")
 # Ensure manifest is rebuilt if buildVars is updated.
 env.Depends(manifest, "buildVars.py")
 
