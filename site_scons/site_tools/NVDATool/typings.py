@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import TypedDict, Protocol, override
 
 
 
@@ -32,3 +32,8 @@ class SymbolDictionaryAttributes(TypedDict):
 
 BrailleTables = dict[str, BrailleTableAttributes]
 SymbolDictionaries = dict[str, SymbolDictionaryAttributes]
+
+
+class Strable(Protocol):
+	@override
+	def __str__(self) -> str: ...
