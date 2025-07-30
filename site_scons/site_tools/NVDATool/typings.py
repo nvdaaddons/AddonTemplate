@@ -16,3 +16,19 @@ class AddonInfo(TypedDict):
 	addon_updateChannel: str|None
 	addon_license: str|None
 	addon_licenseURL: str|None
+
+
+class BrailleTableAttributes(TypedDict):
+    displayName: str
+    contracted: bool
+    output: bool
+    input: bool
+
+
+class SymbolDictionaryAttributes(TypedDict):
+    displayName: str
+    mandatory: bool
+
+
+BrailleTables = dict[str, BrailleTableAttributes]
+SymbolDictionaries = dict[str, SymbolDictionaryAttributes]
