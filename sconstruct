@@ -57,12 +57,16 @@ def addonTool(env: Environment):
 	)
 
 
-def manifestGenerator(target: list[FS.Entry], source: list[FS.Entry], env: Environment, for_signature: bool) -> CommandAction:
+def manifestTool(env: Environment):
 	action = env.Action(
 		lambda target, source, env: generateManifest(source[0].abspath, target[0].abspath) and None,
 		lambda target, source, env: f"Generating manifest {target[0]}",
 	)
-	return action
+	env["BUILDERS"]["NVDAManifest"] = Builder(
+		action=action,
+		suffix=".ini",
+		src_siffix=".ini.tpl"
+	)
 
 
 def translatedManifestGenerator(target: list[FS.Entry], source: list[FS.Entry], env: Environment, for_signature: bool) -> CommandAction:
@@ -172,7 +176,7 @@ vars.Add("versionNumber", "Version number of the form major.minor.patch", "0.0.0
 vars.Add(BoolVariable("dev", "Whether this is a daily development version", False))
 vars.Add("channel", "Update channel for this build", buildVars.addon_info["addon_updateChannel"])
 
-env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", "mdTool", addonTool])
+env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", "mdTool", addonTool, manifestTool])
 env.Append(**buildVars.addon_info)
 
 if env["dev"]:
@@ -192,7 +196,6 @@ buildVars.addon_info["addon_version"] = env["addon_version"]
 buildVars.addon_info["addon_updateChannel"] = env["addon_updateChannel"]
 
 
-env["BUILDERS"]["NVDAManifest"] = Builder(generator=manifestGenerator)
 env["BUILDERS"]["NVDATranslatedManifest"] = Builder(generator=translatedManifestGenerator)
 
 
