@@ -30,7 +30,7 @@ EnsurePythonVersion(3, 10)
 sys.dont_write_bytecode = True
 
 import buildVars  # NOQA: E402
-from site_scons.site_tools.NVDATool.typings import Strable # NOQA: E402
+from site_scons.site_tools.NVDATool.typings import AddonInfo, BrailleTables, SymbolDictionaries, Strable # NOQA: E402
 
 
 def validateVersionNumber(key: str, val: str, _):
@@ -46,8 +46,17 @@ def validateVersionNumber(key: str, val: str, _):
 
 
 def manifestTool(env: Environment):
+	env.SetDefault(brailleTables={})
+	env.SetDefault(symbolDictionaries={})
+
 	action = env.Action(
-		lambda target, source, env: generateManifest(source[0].abspath, target[0].abspath) and None,
+		lambda target, source, env: generateManifest(
+			source[0].abspath,
+			target[0].abspath,
+			addon_info=env["addon_info"],
+			brailleTables=env["brailleTables"],
+			symbolDictionaries=env["symbolDictionaries"],
+		) and None,
 		lambda target, source, env: f"Generating manifest {target[0]}",
 	)
 	env["BUILDERS"]["NVDAManifest"] = Builder(
@@ -80,20 +89,25 @@ def format_nested_section(
 	return "\n".join(lines) + "\n"
 
 
-def generateManifest(source: str, dest: str):
+def generateManifest(
+		source: str,
+		dest: str,
+		addon_info: AddonInfo,
+		brailleTables: BrailleTables,
+		symbolDictionaries: SymbolDictionaries,
+	):
 	# Prepare the root manifest section
-	addon_info = buildVars.addon_info
 	with codecs.open(source, "r", "utf-8") as f:
 		manifest_template = f.read()
 	manifest = manifest_template.format(**addon_info)
 	# Add additional manifest sections such as custom braile tables
 	# Custom braille translation tables
-	if hasattr(buildVars, "brailleTables"):
-		manifest += format_nested_section("brailleTables", buildVars.brailleTables)
+	if brailleTables:
+		manifest += format_nested_section("brailleTables", brailleTables)
 
 	# Custom speech symbol dictionaries
-	if hasattr(buildVars, "symbolDictionaries"):
-		manifest += format_nested_section("symbolDictionaries", buildVars.symbolDictionaries)
+	if symbolDictionaries:
+		manifest += format_nested_section("symbolDictionaries", symbolDictionaries)
 
 	with codecs.open(dest, "w", "utf-8") as f:
 		f.write(manifest)
@@ -228,7 +242,10 @@ env.Alias("mergePot", mergePot)
 env.Depends(mergePot, i18nFiles)
 
 # Generate Manifest path
-manifest = env.NVDAManifest(env.File(addonDir/"manifest.ini"), "manifest.ini.tpl")
+manifest = env.NVDAManifest(env.File(addonDir/"manifest.ini"), "manifest.ini.tpl",
+							addon_info=buildVars.addon_info,
+							brailleTables=buildVars.brailleTables,
+							symbolDictionaries=buildVars.symbolDictionaries)
 # Ensure manifest is rebuilt if buildVars is updated.
 env.Depends(manifest, "buildVars.py")
 
