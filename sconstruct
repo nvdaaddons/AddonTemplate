@@ -46,8 +46,11 @@ def validateVersionNumber(key: str, val: str, _):
 
 
 def addonTool(env: Environment):
+	env.SetDefault(excludePatterns=tuple())
 	action = env.Action(
-		lambda target, source, env: createAddonBundleFromPath(source[0].abspath, target[0].abspath) and None,
+		lambda target, source, env: createAddonBundleFromPath(
+			source[0].abspath, target[0].abspath, env["excludePatterns"]
+		) and None,
 		lambda target, source, env: f"Generating Addon {target[0]}",
 	)
 	env["BUILDERS"]["NVDAAddon"] = Builder(
@@ -85,7 +88,7 @@ def matchesNoPatterns(path: Path, patterns: Iterable[str]) -> bool:
 	return not any((path.match(pattern) for pattern in patterns))
 
 
-def createAddonBundleFromPath(path: str|Path, dest: str):
+def createAddonBundleFromPath(path: str|Path, dest: str, excludePatterns: Iterable[str]):
 	"""Creates a bundle from a directory that contains an addon manifest file."""
 	if isinstance(path, str):
 		path = Path(path)
@@ -95,7 +98,7 @@ def createAddonBundleFromPath(path: str|Path, dest: str):
 			if p.is_dir():
 				continue
 			pathInBundle = p.relative_to(basedir)
-			if matchesNoPatterns(pathInBundle, buildVars.excludedFiles):
+			if matchesNoPatterns(pathInBundle, excludePatterns):
 				z.write(p, pathInBundle)
 	return dest
 
@@ -200,7 +203,7 @@ env["BUILDERS"]["NVDATranslatedManifest"] = Builder(generator=translatedManifest
 
 
 addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
-addon = env.NVDAAddon(addonFile, env.Dir(addonDir))
+addon = env.NVDAAddon(addonFile, env.Dir(addonDir), excludePatterns=buildVars.excludedFiles)
 
 langDirs: list[FS.Dir] = [d for d in env.Glob(localeDir/"*/")]
 
