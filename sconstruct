@@ -30,6 +30,7 @@ EnsurePythonVersion(3, 10)
 sys.dont_write_bytecode = True
 
 import buildVars  # NOQA: E402
+from site_scons.site_tools.NVDATool.typings import Strable # NOQA: E402
 
 
 def validateVersionNumber(key: str, val: str, _):
@@ -69,7 +70,7 @@ def translatedManifestGenerator(target: list[FS.Entry], source: list[FS.Entry], 
 
 def format_nested_section(
 	section_name: str,
-	data: Mapping[str, Mapping[str, str]]
+	data: Mapping[str, Mapping[str, Strable]]
 ) -> str:
 	lines = [f"\n[{section_name}]"]
 	for item_name, inner_dict in data.items():
@@ -107,7 +108,7 @@ def generateTranslatedManifest(source: str, language: str, dest: str):
 		manifest_template = f.read()
 	manifest = manifest_template.format(**vars)
 
-	def _format_section_only_with_displayName(section_name: str, data: Mapping[str, Mapping[str, str]]) -> str:
+	def _format_section_only_with_displayName(section_name: str, data: Mapping[str, Mapping[str, Strable]]) -> str:
 		lines = [f"\n[{section_name}]"]
 		for item, inner_dict in data.items():
 			lines.append(f"[[{item}]]")
