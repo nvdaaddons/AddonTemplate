@@ -18,27 +18,9 @@ The following environment variables are required to create the manifest:
 from pathlib import Path
 
 from SCons.Script import Environment, Builder
-from SCons.Node import FS
-from SCons.Action import CommandAction
 
 from .addon import createAddonBundleFromPath
 from .manifests import generateManifest, generateTranslatedManifest
-
-
-
-def translatedManifestGenerator(target: list[FS.Entry], source: list[FS.Entry], env: Environment, for_signature: bool) -> CommandAction:
-	action = env.Action(
-		lambda target, source, env: generateTranslatedManifest(
-			source[1].abspath,
-			target[0].abspath,
-			mo=source[0].abspath,
-			addon_info=env["addon_info"],
-			brailleTables=env["brailleTables"],
-			symbolDictionaries=env["symbolDictionaries"],
-		) and None,
-		lambda target, source, env: f"Generating translated manifest {target[0]}",
-	)
-	return action
 
 
 
@@ -76,7 +58,23 @@ def generate(env: Environment):
 		src_siffix=".ini.tpl"
 	)
 
-	env["BUILDERS"]["NVDATranslatedManifest"] = Builder(generator=translatedManifestGenerator)
+	translatedManifestAction = env.Action(
+		lambda target, source, env: generateTranslatedManifest(
+			source[1].abspath,
+			target[0].abspath,
+			mo=source[0].abspath,
+			addon_info=env["addon_info"],
+			brailleTables=env["brailleTables"],
+			symbolDictionaries=env["symbolDictionaries"],
+		) and None,
+		lambda target, source, env: f"Generating translated manifest {target[0]}",
+	)
+
+	env["BUILDERS"]["NVDATranslatedManifest"] = Builder(
+		action=translatedManifestAction,
+		suffix=".ini",
+		src_siffix=".ini.tpl"
+	)
 
 
 def exists():
