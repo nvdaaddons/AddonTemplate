@@ -10,7 +10,6 @@ Builders:
 The following environment variables are required to create the manifest:
 
 - addon_info: .typing.AddonInfo
-- lcaledir: str | pathlib.Path
 - brailleTables: .typings.BrailleTables
 - symbolDictionaries: .typings.SymbolDictionaries
 
@@ -28,13 +27,11 @@ from .manifests import generateManifest, generateTranslatedManifest
 
 
 def translatedManifestGenerator(target: list[FS.Entry], source: list[FS.Entry], env: Environment, for_signature: bool) -> CommandAction:
-	dir = Path(str(source[0])).absolute().parents[1]
-	lang = dir.name
 	action = env.Action(
 		lambda target, source, env: generateTranslatedManifest(
 			source[1].abspath,
 			target[0].abspath,
-			lang, env["localedir"],
+			mo=source[0].abspath,
 			addon_info=env["addon_info"],
 			brailleTables=env["brailleTables"],
 			symbolDictionaries=env["symbolDictionaries"],

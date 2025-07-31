@@ -59,7 +59,6 @@ vars.Add("channel", "Update channel for this build", buildVars.addon_info["addon
 env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", "mdTool", "NVDATool"])
 env.Append(
 	addon_info=buildVars.addon_info,
-	localedir=localeDir,
 	brailleTables=buildVars.brailleTables,
 	symbolDictionaries=buildVars.symbolDictionaries,
 	**buildVars.addon_info

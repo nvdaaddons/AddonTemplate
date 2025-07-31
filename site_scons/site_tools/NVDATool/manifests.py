@@ -46,13 +46,14 @@ def generateManifest(
 def generateTranslatedManifest(
 		source: str,
 		dest: str,
-		language: str,
-		localeDir: str,
+		*,
+		mo: str,
 		addon_info: AddonInfo,
 		brailleTables: BrailleTables,
 		symbolDictionaries: SymbolDictionaries,
 	):
-	_ = gettext.translation("nvda", localedir=localeDir, languages=[language]).gettext
+	with open(mo, "rb") as f:
+		_ = gettext.GNUTranslations(f).gettext
 	vars: dict[str, str] = {}
 	for var in ("addon_summary", "addon_description"):
 		vars[var] = _(addon_info[var])
