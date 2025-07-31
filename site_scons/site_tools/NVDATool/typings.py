@@ -1,4 +1,4 @@
-from typing import TypedDict, Protocol, override
+from typing import TypedDict, Protocol
 
 
 
@@ -35,5 +35,4 @@ SymbolDictionaries = dict[str, SymbolDictionaryAttributes]
 
 
 class Strable(Protocol):
-	@override
 	def __str__(self) -> str: ...
