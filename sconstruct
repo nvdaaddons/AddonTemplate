@@ -3,13 +3,11 @@
 # This file is covered by the GNU General Public License.
 # See the file COPYING.txt for more details.
 
-import codecs
-import gettext
 import os
 import os.path
 import sys
 from pathlib import Path
-from collections.abc import Iterable, Mapping
+from collections.abc import Iterable
 from typing import Final
 
 # While names imported below are available by default in every SConscript
@@ -20,7 +18,6 @@ from SCons.Script import EnsurePythonVersion, Variables, BoolVariable, Environme
 
 # Imports for type hints
 from SCons.Node import FS
-from SCons.Action import CommandAction
 
 # Add-on localization exchange facility and the template requires Python 3.10.
 # For best practice, use Python 3.11 or later to align with NVDA development.
@@ -30,7 +27,6 @@ EnsurePythonVersion(3, 10)
 sys.dont_write_bytecode = True
 
 import buildVars  # NOQA: E402
-from site_scons.site_tools.NVDATool.typings import AddonInfo, BrailleTables, SymbolDictionaries, Strable # NOQA: E402
 
 
 def validateVersionNumber(key: str, val: str, _):
@@ -43,118 +39,6 @@ def validateVersionNumber(key: str, val: str, _):
 		raise ValueError(f"{key} must have three parts (major.minor.patch)")
 	if not all([part.isnumeric() for part in versionNumber]):
 		raise ValueError(f"{key} (major.minor.patch) must be integers")
-
-
-def manifestTool(env: Environment):
-	env.SetDefault(brailleTables={})
-	env.SetDefault(symbolDictionaries={})
-
-	action = env.Action(
-		lambda target, source, env: generateManifest(
-			source[0].abspath,
-			target[0].abspath,
-			addon_info=env["addon_info"],
-			brailleTables=env["brailleTables"],
-			symbolDictionaries=env["symbolDictionaries"],
-		) and None,
-		lambda target, source, env: f"Generating manifest {target[0]}",
-	)
-	env["BUILDERS"]["NVDAManifest"] = Builder(
-		action=action,
-		suffix=".ini",
-		src_siffix=".ini.tpl"
-	)
-
-
-def translatedManifestGenerator(target: list[FS.Entry], source: list[FS.Entry], env: Environment, for_signature: bool) -> CommandAction:
-	dir = Path(str(source[0])).absolute().parents[1]
-	lang = dir.name
-	action = env.Action(
-		lambda target, source, env: generateTranslatedManifest(
-			source[1].abspath,
-			target[0].abspath,
-			lang, env["localedir"],
-			addon_info=env["addon_info"],
-			brailleTables=env["brailleTables"],
-			symbolDictionaries=env["symbolDictionaries"],
-		) and None,
-		lambda target, source, env: f"Generating translated manifest {target[0]}",
-	)
-	return action
-
-
-def format_nested_section(
-	section_name: str,
-	data: Mapping[str, Mapping[str, Strable]]
-) -> str:
-	lines = [f"\n[{section_name}]"]
-	for item_name, inner_dict in data.items():
-		lines.append(f"[[{item_name}]]")
-		for key, val in inner_dict.items():
-			lines.append(f"{key} = {val}")
-	return "\n".join(lines) + "\n"
-
-
-def generateManifest(
-		source: str,
-		dest: str,
-		addon_info: AddonInfo,
-		brailleTables: BrailleTables,
-		symbolDictionaries: SymbolDictionaries,
-	):
-	# Prepare the root manifest section
-	with codecs.open(source, "r", "utf-8") as f:
-		manifest_template = f.read()
-	manifest = manifest_template.format(**addon_info)
-	# Add additional manifest sections such as custom braile tables
-	# Custom braille translation tables
-	if brailleTables:
-		manifest += format_nested_section("brailleTables", brailleTables)
-
-	# Custom speech symbol dictionaries
-	if symbolDictionaries:
-		manifest += format_nested_section("symbolDictionaries", symbolDictionaries)
-
-	with codecs.open(dest, "w", "utf-8") as f:
-		f.write(manifest)
-
-
-def generateTranslatedManifest(
-		source: str,
-		dest: str,
-		language: str,
-		localeDir: str,
-		addon_info: AddonInfo,
-		brailleTables: BrailleTables,
-		symbolDictionaries: SymbolDictionaries,
-	):
-	_ = gettext.translation("nvda", localedir=localeDir, languages=[language]).gettext
-	vars: dict[str, str] = {}
-	for var in ("addon_summary", "addon_description"):
-		vars[var] = _(addon_info[var])
-	with codecs.open(source, "r", "utf-8") as f:
-		manifest_template = f.read()
-	manifest = manifest_template.format(**vars)
-
-	def _format_section_only_with_displayName(section_name: str, data: Mapping[str, Mapping[str, Strable]]) -> str:
-		lines = [f"\n[{section_name}]"]
-		for item, inner_dict in data.items():
-			lines.append(f"[[{item}]]")
-			# Fetch display name only.
-			lines.append(f"displayName = {_(inner_dict['displayName'])}")
-		return "\n".join(lines) + "\n"
-
-	# Add additional manifest sections such as custom braile tables
-	# Custom braille translation tables
-	if brailleTables:
-		manifest += _format_section_only_with_displayName("brailleTables", brailleTables)
-
-	# Custom speech symbol dictionaries
-	if symbolDictionaries:
-		manifest += _format_section_only_with_displayName("symbolDictionaries", symbolDictionaries)
-
-	with codecs.open(dest, "w", "utf-8") as f:
-		f.write(manifest)
 
 
 def expandGlobs(patterns: Iterable[str], rootdir: Path = Path(".")) -> list[FS.Entry]:
@@ -172,7 +56,7 @@ vars.Add("versionNumber", "Version number of the form major.minor.patch", "0.0.0
 vars.Add(BoolVariable("dev", "Whether this is a daily development version", False))
 vars.Add("channel", "Update channel for this build", buildVars.addon_info["addon_updateChannel"])
 
-env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", "mdTool", "NVDATool", manifestTool])
+env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", "mdTool", "NVDATool"])
 env.Append(
 	addon_info=buildVars.addon_info,
 	localedir=localeDir,
@@ -196,9 +80,6 @@ if "channel" in env and env["channel"] is not None:
 
 buildVars.addon_info["addon_version"] = env["addon_version"]
 buildVars.addon_info["addon_updateChannel"] = env["addon_updateChannel"]
-
-
-env["BUILDERS"]["NVDATranslatedManifest"] = Builder(generator=translatedManifestGenerator)
 
 
 addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
