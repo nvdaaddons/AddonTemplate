@@ -19,8 +19,7 @@ The following environment variables are required to build the HTML:
 - localeDir: str
 - localeFileName: str
 - mdExtensions: list[str]
-- addon_summary: str
-- addon_version: str
+- addon_info: .typings.AddonInfo
 
 """
 
@@ -97,8 +96,7 @@ def generate(env: Environment):
 			localeDir=env["localeDir"],
 			loacleFileName=env["localeFileName"],
 			mdExtensions=env["mdExtensions"],
-			addonSummary=env["addon_summary"],
-			addonVersion=env["addon_version"]
+			addon_info=env["addon_info"],
 		) and None,
 		lambda target, source, env: f"Generating {target[0]}",
 	)

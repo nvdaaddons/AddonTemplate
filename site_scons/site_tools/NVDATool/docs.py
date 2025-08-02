@@ -5,6 +5,8 @@ from pathlib import Path
 
 import markdown
 
+from .typings import AddonInfo
+
 
 
 def md2html(
@@ -14,8 +16,7 @@ def md2html(
 		localeDir: Path,
 		loacleFileName: str,
 		mdExtensions: list[str],
-		addonSummary: str,
-		addonVersion: str
+		addon_info: AddonInfo
 	):
 	if isinstance(source, str):
 		source = Path(source)
@@ -29,10 +30,10 @@ def md2html(
 			localedir=localeDir,
 			languages=[localeLang]
 		).gettext
-		summary = _(addonSummary)
+		summary = _(addon_info["addon_summary"])
 	except Exception:
-		summary = addonSummary
-	title = f"{summary} {addonVersion}"
+		summary = addon_info["addon_summary"]
+	title = f"{summary} {addon_info["addon_version"]}"
 	headerDic = {
 		'[[!meta title="': "# ",
 		'"]]': " #",
