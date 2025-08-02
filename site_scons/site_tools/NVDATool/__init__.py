@@ -6,12 +6,21 @@ Builders:
 - NVDAAddon: Creates a .nvda-addon zip file. Requires the `excludePatterns` environment variable.
 - NVDAManifest: Creates the manifest.ini file.
 - NVDATranslatedManifest: Creates the manifest.ini file with only translated information.
+- md2html: Build HTML from Markdown
 
 The following environment variables are required to create the manifest:
 
 - addon_info: .typing.AddonInfo
 - brailleTables: .typings.BrailleTables
 - symbolDictionaries: .typings.SymbolDictionaries
+
+The following environment variables are required to build the HTML:
+
+- localeDir: str
+- localeFileName: str
+- mdExtensions: list[str]
+- addon_summary: str
+- addon_version: str
 
 """
 
@@ -21,6 +30,7 @@ from SCons.Script import Environment, Builder
 
 from .addon import createAddonBundleFromPath
 from .manifests import generateManifest, generateTranslatedManifest
+from .docs import md2html
 
 
 
@@ -74,6 +84,28 @@ def generate(env: Environment):
 		action=translatedManifestAction,
 		suffix=".ini",
 		src_siffix=".ini.tpl"
+	)
+
+	env.SetDefault(localeDir = Path("locale/"))
+	env.SetDefault(localeFileName = "messages")
+	env.SetDefault(mdExtensions = {})
+
+	mdAction = env.Action(
+		lambda target, source, env: md2html(
+			source[0].path,
+			target[0].path,
+			localeDir=env["localeDir"],
+			loacleFileName=env["localeFileName"],
+			mdExtensions=env["mdExtensions"],
+			addonSummary=env["addon_summary"],
+			addonVersion=env["addon_version"]
+		) and None,
+		lambda target, source, env: f"Generating {target[0]}",
+	)
+	env["BUILDERS"]["md2html"] = env.Builder(
+		action=mdAction,
+		suffix=".html",
+		src_suffix=".md",
 	)
 
 

@@ -56,7 +56,7 @@ vars.Add("versionNumber", "Version number of the form major.minor.patch", "0.0.0
 vars.Add(BoolVariable("dev", "Whether this is a daily development version", False))
 vars.Add("channel", "Update channel for this build", buildVars.addon_info["addon_updateChannel"])
 
-env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", "mdTool", "NVDATool"])
+env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", "NVDATool"])
 env.Append(
 	addon_info=buildVars.addon_info,
 	brailleTables=buildVars.brailleTables,
