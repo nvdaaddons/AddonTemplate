@@ -81,20 +81,21 @@ if "channel" in env and env["channel"] is not None:
 addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
 addon = env.NVDAAddon(addonFile, env.Dir(addonDir), excludePatterns=buildVars.excludedFiles)
 
-langDirs: list[FS.Dir] = [d for d in env.Glob(localeDir/"*/")]
+langDirs: list[FS.Dir] = [env.Dir(d) for d in env.Glob(localeDir/"*/") if d.isdir()]
 
 # Allow all NVDA's gettext po files to be compiled in source/locale, and manifest files to be generated
-moByLang: dict[FS.Dir, FS.File] = {}
+moByLang: dict[str, FS.File] = {}
 for dir in langDirs:
 	poFile = dir.File(os.path.join("LC_MESSAGES", "nvda.po"))
-	moFile = env.gettextMoFile(poFile)
-	moByLang[dir] = moFile
-	env.Depends(moFile, poFile)
+	moTarget = env.gettextMoFile(poFile)
+	moFile = env.File(moTarget[0])
+	moByLang[dir.name] = moFile
+	env.Depends(moTarget, poFile)
 	translatedManifest = env.NVDATranslatedManifest(
 		dir.File("manifest.ini"), [moFile, "manifest-translated.ini.tpl"]
 	)
 	env.Depends(translatedManifest, ["buildVars.py"])
-	env.Depends(addon, [translatedManifest, moFile])
+	env.Depends(addon, [translatedManifest, moTarget])
 
 pythonFiles = expandGlobs(buildVars.pythonSources)
 for file in pythonFiles:
@@ -115,7 +116,7 @@ if (readmeFile := Path("readme.md")).is_file():
 for mdFile in env.Glob(docsDir/"*/*.md"):
 	# the title of the html file is translated based on the contents of something in the moFile for a language.
 	# Thus, we find the moFile for this language and depend on it if it exists.
-	lang = Path(str(mdFile)).absolute().parent.name
+	lang = mdFile.dir.name
 	moFile = moByLang.get(lang)
 	htmlFile = env.md2html(mdFile, localeDir=localeDir, localeFileName="nvda", mdExtensions=buildVars.markdownExtensions)
 	env.Depends(htmlFile, mdFile)
