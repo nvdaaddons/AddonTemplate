@@ -4,18 +4,8 @@ import gettext
 from collections.abc import Mapping
 
 from .typings import AddonInfo, BrailleTables, SymbolDictionaries, Strable
+from .utils import format_nested_section
 
-
-def format_nested_section(
-	section_name: str,
-	data: Mapping[str, Mapping[str, Strable]]
-) -> str:
-	lines = [f"\n[{section_name}]"]
-	for item_name, inner_dict in data.items():
-		lines.append(f"[[{item_name}]]")
-		for key, val in inner_dict.items():
-			lines.append(f"{key} = {val}")
-	return "\n".join(lines) + "\n"
 
 
 def generateManifest(
