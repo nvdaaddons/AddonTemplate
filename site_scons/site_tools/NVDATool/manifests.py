@@ -3,8 +3,7 @@ import codecs
 import gettext
 from collections.abc import Mapping
 
-from site_scons.site_tools.NVDATool.typings import AddonInfo, BrailleTables, SymbolDictionaries, Strable # NOQA: E402
-
+from .typings import AddonInfo, BrailleTables, SymbolDictionaries, Strable
 
 
 def format_nested_section(
