@@ -4,6 +4,7 @@ from pathlib import Path
 
 import markdown
 
+from . import utils
 from .typings import AddonInfo
 
 
@@ -12,8 +13,7 @@ def md2html(
 		source: str|Path,
 		dest: str|Path,
 		*,
-		localeDir: Path,
-		loacleFileName: str,
+		moFile: str|Path|None,
 		mdExtensions: list[str],
 		addon_info: AddonInfo
 	):
@@ -21,19 +21,22 @@ def md2html(
 		source = Path(source)
 	if isinstance(dest, str):
 		dest = Path(dest)
+	if isinstance(moFile, str):
+		moFile = Path(moFile)
 
 	# Use extensions if defined.
 	localeLang = source.parent.name
 	lang = localeLang.replace("_", "-")
 	try:
-		_ = gettext.translation(
-			loacleFileName,
-			localedir=localeDir,
-			languages=[localeLang]
-		).gettext
-		summary = _(addon_info["addon_summary"])
+		if moFile is not None:
+			with moFile.open("rb") as f:
+				_ = gettext.GNUTranslations(f).gettext
+		else:
+			_ = utils._
 	except Exception:
 		summary = addon_info["addon_summary"]
+	else:
+		summary = _(addon_info["addon_summary"])
 	title = f"{summary} {addon_info["addon_version"]}"
 	headerDic = {
 		'[[!meta title="': "# ",

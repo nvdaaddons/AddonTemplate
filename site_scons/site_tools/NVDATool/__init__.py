@@ -16,8 +16,7 @@ The following environment variables are required to create the manifest:
 
 The following environment variables are required to build the HTML:
 
-- localeDir: str
-- localeFileName: str
+- moFile: str|Path|None
 - mdExtensions: list[str]
 - addon_info: .typings.AddonInfo
 
@@ -85,16 +84,13 @@ def generate(env: Environment):
 		src_siffix=".ini.tpl"
 	)
 
-	env.SetDefault(localeDir = Path("locale/"))
-	env.SetDefault(localeFileName = "messages")
 	env.SetDefault(mdExtensions = {})
 
 	mdAction = env.Action(
 		lambda target, source, env: md2html(
 			source[0].path,
 			target[0].path,
-			localeDir=env["localeDir"],
-			loacleFileName=env["localeFileName"],
+			moFile=env["moFile"].path if env["moFile"] else None,
 			mdExtensions=env["mdExtensions"],
 			addon_info=env["addon_info"],
 		) and None,
