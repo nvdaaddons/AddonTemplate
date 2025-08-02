@@ -1,9 +1,9 @@
 
 import codecs
 import gettext
-from collections.abc import Mapping
+from functools import partial
 
-from .typings import AddonInfo, BrailleTables, SymbolDictionaries, Strable
+from .typings import AddonInfo, BrailleTables, SymbolDictionaries
 from .utils import format_nested_section
 
 
@@ -50,13 +50,11 @@ def generateTranslatedManifest(
 		manifest_template = f.read()
 	manifest = manifest_template.format(**vars)
 
-	def _format_section_only_with_displayName(section_name: str, data: Mapping[str, Mapping[str, Strable]]) -> str:
-		lines = [f"\n[{section_name}]"]
-		for item, inner_dict in data.items():
-			lines.append(f"[[{item}]]")
-			# Fetch display name only.
-			lines.append(f"displayName = {_(str(inner_dict['displayName']))}")
-		return "\n".join(lines) + "\n"
+	_format_section_only_with_displayName = partial(
+		format_nested_section,
+		include_only_keys = ("displayName",),
+		_ = _,
+	)
 
 	# Add additional manifest sections such as custom braile tables
 	# Custom braille translation tables
