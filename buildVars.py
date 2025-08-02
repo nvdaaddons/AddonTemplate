@@ -6,10 +6,9 @@ from site_scons.site_tools.NVDATool.typings import AddonInfo, BrailleTables, Sym
 # Since some strings in `addon_info` are translatable,
 # we need to include them in the .po files.
 # Gettext recognizes only strings given as parameters to the `_` function.
-# To avoid initializing translations in this module we simply roll our own "fake" `_` function
+# To avoid initializing translations in this module we simply import a "fake" `_` function
 # which returns whatever is given to it as an argument.
-def _(arg: str) -> str:
-	return arg
+from site_scons.site_tools.NVDATool.utils import _
 
 
 # Add-on information variables
