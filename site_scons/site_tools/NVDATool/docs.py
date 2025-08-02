@@ -1,6 +1,5 @@
 
 import gettext
-import codecs
 from pathlib import Path
 
 import markdown
@@ -11,7 +10,7 @@ from .typings import AddonInfo
 
 def md2html(
 		source: str|Path,
-		dest: str,
+		dest: str|Path,
 		*,
 		localeDir: Path,
 		loacleFileName: str,
@@ -20,6 +19,8 @@ def md2html(
 	):
 	if isinstance(source, str):
 		source = Path(source)
+	if isinstance(dest, str):
+		dest = Path(dest)
 
 	# Use extensions if defined.
 	localeLang = source.parent.name
@@ -38,7 +39,7 @@ def md2html(
 		'[[!meta title="': "# ",
 		'"]]': " #",
 	}
-	with codecs.open(str(source), "r", "utf-8") as f:
+	with source.open("r") as f:
 		mdText = f.read()
 	for k, v in headerDic.items():
 		mdText = mdText.replace(k, v, 1)
@@ -58,5 +59,5 @@ def md2html(
 			"</body>\n</html>",
 		)
 	)
-	with codecs.open(dest, "w", "utf-8") as f:
-		f.write(docText)
+	with dest.open("w") as f:
+		f.write(docText) # type: ignore
