@@ -37,7 +37,8 @@ def md2html(
 		summary = addon_info["addon_summary"]
 	else:
 		summary = _(addon_info["addon_summary"])
-	title = f"{summary} {addon_info["addon_version"]}"
+	version = addon_info["addon_version"]
+	title = f"{summary} {version}"
 	headerDic = {
 		'[[!meta title="': "# ",
 		'"]]': " #",
