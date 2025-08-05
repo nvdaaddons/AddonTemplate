@@ -9,7 +9,7 @@ def matchesNoPatterns(path: Path, patterns: Iterable[str]) -> bool:
 	return not any((path.match(pattern) for pattern in patterns))
 
 
-def createAddonBundleFromPath(path: str|Path, dest: str, excludePatterns: Iterable[str]):
+def createAddonBundleFromPath(path: str | Path, dest: str, excludePatterns: Iterable[str]):
 	"""Creates a bundle from a directory that contains an addon manifest file."""
 	if isinstance(path, str):
 		path = Path(path)
