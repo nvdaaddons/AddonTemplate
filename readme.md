@@ -47,9 +47,9 @@ In addition, this template includes configuration files for the following tools 
 You need the following software to use this code for your NVDA add-on development and packaging:
 
 * a Python distribution (3.11 or later is recommended). Check the [Python Website](https://www.python.org) for Windows Installers. Please note that at present, preparing the NVDA source code requires the 32-bit version of Python 3.11 with 64-bit version planned.
-* Scons - [Website](https://www.scons.org/) - version 4.8.1 or later. You can install it via PIP.
+* Scons - [Website](https://www.scons.org/) - version 4.9.1 or later. You can install it via PIP.
 * GNU Gettext tools, if you want to have localization support for your add-on - Recommended. Any Linux distro or cygwin have those installed. You can find windows builds [here](https://gnuwin32.sourceforge.net/downlinks/gettext.php).
-* Markdown 3.7 or later, if you want to convert documentation files to HTML documents. You can install it via PIP.
+* Markdown 3.8 or later, if you want to convert documentation files to HTML documents. You can install it via PIP.
 * Optional: additional tools such as linters and type checkers defined in pyproject.toml file.
 
 Note, that you may not need these tools in a local build environment, if you are using [Appveyor](https://appveyor.com/) or [GitHub Actions](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions), to build and package your add-ons.
@@ -141,8 +141,7 @@ Note: you must fill out this dictionary if at least one custom symbol dictionary
 1. Open a command line, change to the folder that has the `sconstruct` file (usually the root of your add-on development folder) and run the `scons` command. The created add-on, if there were no errors, is placed in the current directory.
 2. You can further customize variables in the `buildVars.py` file.
 3. You can also customize version and update channel information from command line by passing the following switches when running scons:
-	* version: add-on version string.
-	* versionNumber: add-on version number of the form major.minor.patch (all integers)
+	* version: add-on version string of the form major.minor or major.minor.patch (all integers)
 	* channel: update channel (do not use this switch unless you know what you are doing).
 	* dev: suitable for development builds, names the add-on according to current date (yyyymmdd) and sets update channel to "dev".
 
