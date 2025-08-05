@@ -14,7 +14,7 @@ from typing import Final
 # Linters aren't aware about them.
 # To avoid PyRight `reportUndefinedVariable` errors about them they are imported explicitly.
 # When using other  Scons functions please add them to the line below.
-from SCons.Script import EnsurePythonVersion, Variables, BoolVariable, Environment, Builder, Copy
+from SCons.Script import EnsurePythonVersion, Variables, BoolVariable, Environment, Copy
 
 # Imports for type hints
 from SCons.Node import FS

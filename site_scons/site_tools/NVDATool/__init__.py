@@ -22,8 +22,6 @@ The following environment variables are required to build the HTML:
 
 """
 
-from pathlib import Path
-
 from SCons.Script import Environment, Builder
 
 from .addon import createAddonBundleFromPath
