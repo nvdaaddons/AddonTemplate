@@ -61,7 +61,6 @@ env.Append(
 	addon_info=buildVars.addon_info,
 	brailleTables=buildVars.brailleTables,
 	symbolDictionaries=buildVars.symbolDictionaries,
-	**buildVars.addon_info
 )
 
 if env["dev"]:
@@ -69,13 +68,16 @@ if env["dev"]:
 
 	versionTimestamp = date.today().strftime('%Y%m%d')
 	version = f"{versionTimestamp}.0.0"
-	env["addon_version"] = version
+	env["addon_info"]["addon_version"] = version
 	env["versionNumber"] = version
 	env["channel"] = "dev"
 elif env["version"] is not None:
-	env["addon_version"] = env["version"]
+	env["addon_info"]["addon_version"] = env["version"]
 if "channel" in env and env["channel"] is not None:
-	env["addon_updateChannel"] = env["channel"]
+	env["addon_info"]["addon_updateChannel"] = env["channel"]
+
+# This is necessary for further use in formatting file names.
+env.Append(**env["addon_info"])
 
 
 addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
