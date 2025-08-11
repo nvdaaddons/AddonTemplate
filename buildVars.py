@@ -25,6 +25,10 @@ addon_info = AddonInfo(
 It can span multiple lines."""),
 	# version
 	addon_version="x.y",
+	# Brief changelog for this version
+	# Translators: what's new content for the add-on version to be shown in the add-on store
+	addon_changelog=_("""Changelog for the add-on version.
+It can span multiple lines."""),
 	# Author(s)
 	addon_author="name <name@domain.com>",
 	# URL for the add-on documentation support
