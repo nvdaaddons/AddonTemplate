@@ -92,6 +92,7 @@ An add-on manifest generated manually or via `buildVars.py` must include the fol
 * Summary (string): name as shown on NVDA's Add-on store.
 * Description (string): a short detailed description about the add-on.
 * Version (string), ideally number.number with an optional third number, denoting major.minor.patch.
+* Changelog (string): changes between previous and current add-on releases.
 * Author (string and an email address): one or more add-on author contact information in the form "name <email@address>".
 * URL (string): a web address where the add-on information can be found such as add-on repository.
 * docFileName (string): name of the documentation file.
