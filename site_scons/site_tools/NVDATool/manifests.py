@@ -44,7 +44,7 @@ def generateTranslatedManifest(
 	with open(mo, "rb") as f:
 		_ = gettext.GNUTranslations(f).gettext
 	vars: dict[str, str] = {}
-	for var in ("addon_summary", "addon_description"):
+	for var in ("addon_summary", "addon_description", "addon_changelog"):
 		vars[var] = _(addon_info[var])
 	with codecs.open(source, "r", "utf-8") as f:
 		manifest_template = f.read()

@@ -7,6 +7,7 @@ class AddonInfo(TypedDict):
 	addon_summary: str
 	addon_description: str
 	addon_version: str
+	addon_changelog: str
 	addon_author: str
 	addon_url: str | None
 	addon_sourceURL: str | None
