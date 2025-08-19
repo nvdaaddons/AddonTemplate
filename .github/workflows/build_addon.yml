@@ -62,14 +62,14 @@ jobs:
     - name: Calculate sha256
       run: |
         echo -e "\nSHA256: " >> changelog.md
-        sha256sum packaged_addon/*.nvda-addon >> changelog.md
+        sha256sum *.nvda-addon >> changelog.md
 
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          packaged_addon/*.nvda-addon
-          packaged_addon/*.pot
+          *.nvda-addon
+          *.pot
         body_path: changelog.md
         fail_on_unmatched_files: true
         prerelease: ${{ contains(github.ref, '-') }}
