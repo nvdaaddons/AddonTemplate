@@ -37,7 +37,7 @@ def md2html(
 		'[[!meta title="': "# ",
 		'"]]': " #",
 	}
-	with source.open("r") as f:
+	with source.open("r", encoding="utf-8") as f:
 		mdText = f.read()
 	for k, v in headerDic.items():
 		mdText = mdText.replace(k, v, 1)
@@ -57,5 +57,5 @@ def md2html(
 			"</body>\n</html>",
 		)
 	)
-	with dest.open("w") as f:
+	with dest.open("w", encoding="utf-8") as f:
 		f.write(docText) # type: ignore
