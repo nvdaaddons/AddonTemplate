@@ -1,5 +1,7 @@
 # NVDA Add-on Scons Template
 
+IMPORTANT: as of December 1, 2025, nvdaaddons/addonTemplate repository is archived. Please use nvaccess/addonTemplate repository.
+
 This package contains a basic template structure for NVDA add-on development, building, distribution and localization.
 For details about NVDA add-on development, please see the [NVDA Add-on Development Guide](https://github.com/nvdaaddons/DevGuide/wiki/NVDA-Add-on-Development-Guide).
 The NVDA add-on development/discussion list [is here](https://nvda-addons.groups.io/g/nvda-addons)
